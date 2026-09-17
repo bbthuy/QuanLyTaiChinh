@@ -8,6 +8,12 @@
     <Compile Update="Control\StatCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\AnalyticsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\DashboardView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\TransactionsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
