@@ -1,4 +1,5 @@
-﻿using QuanLyTaiChinh.View.Auth;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,23 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTaiChinh
+namespace QuanLyTaiChinh.View.Dashboard
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DashboardView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class DashboardView : UserControl
     {
-        public MainWindow()
+        public DashboardView()
         {
             InitializeComponent();
-
-            Navigate(new LoginView());
-        }
-
-        public void Navigate(UserControl view)
-        {
-            MainContent.Content = view;
         }
     }
 }

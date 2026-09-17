@@ -8,6 +8,30 @@
     <Compile Update="Control\StatCard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\Auth\ChangePasswordView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\ForgotPasswordView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\LoginView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\RegisterView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\ResetPasswordView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\VerifyEmailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Auth\VerifyResetCodeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\Dashboard\DashboardView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\TransactionsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

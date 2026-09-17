@@ -1,0 +1,407 @@
+﻿<UserControl x:Class="QuanLyTaiChinh.View.Auth.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              Background="White">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="55*"/>
+            <ColumnDefinition Width="45*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT SIDE -->
+        <Grid Grid.Column="0">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0"
+                                     EndPoint="1,1">
+                    <GradientStop Color="#3F6488"
+                                  Offset="0"/>
+                    <GradientStop Color="#63B2DF"
+                                  Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+
+            <Grid Margin="45">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- LOGO -->
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0">
+
+                    <Border Width="50"
+                            Height="50"
+                            CornerRadius="12"
+                            Background="#30FFFFFF"
+                            BorderBrush="#8FD0F0"
+                            BorderThickness="1">
+
+                        <TextBlock Text="$"
+                                   FontSize="26"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Margin="12,3,0,0">
+                        <TextBlock Text="FinanceWise"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+
+                        <TextBlock Text="Quản lý tài chính thông minh"
+                                   FontSize="12"
+                                   Foreground="#D4ECF8"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!-- MAIN CONTENT -->
+                <StackPanel Grid.Row="1"
+                            VerticalAlignment="Center">
+
+                    <TextBlock Text="Kiểm soát tài chính,"
+                               FontSize="38"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+
+                    <TextBlock Text="tự do cuộc sống"
+                               FontSize="38"
+                               FontWeight="Bold"
+                               Foreground="#AED8EF"
+                               Margin="0,0,0,18"/>
+
+                    <TextBlock Width="500"
+                               HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               LineHeight="26"
+                               FontSize="16"
+                               Foreground="#E3F2FA"
+                               Text="Theo dõi thu chi, lập ngân sách thông minh và đạt mục tiêu tài chính của bạn với FinanceWise."/>
+
+                    <!-- STATS -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,35,0,0">
+
+                        <Border Width="125"
+                                Height="100"
+                                Margin="0,0,15,0"
+                                CornerRadius="18"
+                                Background="#18FFFFFF"
+                                BorderBrush="#69C3ED"
+                                BorderThickness="1">
+
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+
+                                <TextBlock Text="32K+"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock Text="Người dùng"
+                                           FontSize="13"
+                                           Foreground="#D8EEF8"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,7,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Width="125"
+                                Height="100"
+                                Margin="0,0,15,0"
+                                CornerRadius="18"
+                                Background="#18FFFFFF"
+                                BorderBrush="#69C3ED"
+                                BorderThickness="1">
+
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+
+                                <TextBlock Text="98%"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock Text="Hài lòng"
+                                           FontSize="13"
+                                           Foreground="#D8EEF8"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,7,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Width="125"
+                                Height="100"
+                                CornerRadius="18"
+                                Background="#18FFFFFF"
+                                BorderBrush="#69C3ED"
+                                BorderThickness="1">
+
+                            <StackPanel VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+
+                                <TextBlock Text="4.9★"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"/>
+
+                                <TextBlock Text="Đánh giá"
+                                           FontSize="13"
+                                           Foreground="#D8EEF8"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,7,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!-- TESTIMONIAL -->
+                <Border Grid.Row="2"
+                        Padding="25"
+                        CornerRadius="20"
+                        Background="#18FFFFFF"
+                        BorderBrush="#6FC5EC"
+                        BorderThickness="1">
+
+                    <StackPanel>
+
+                        <TextBlock Text="“FinanceWise giúp tôi tiết kiệm được 8 triệu mỗi tháng chỉ sau 3 tháng sử dụng. Giao diện trực quan, dễ dùng!”"
+                                   TextWrapping="Wrap"
+                                   FontStyle="Italic"
+                                   Foreground="#EAF7FD"
+                                   FontSize="14"
+                                   LineHeight="22"/>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,18,0,0">
+
+                            <Border Width="45"
+                                    Height="45"
+                                    CornerRadius="22"
+                                    Background="#4EA8D6">
+
+                                <TextBlock Text="T"
+                                           Foreground="White"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+
+                            <StackPanel Margin="12,2,0,0">
+
+                                <TextBlock Text="Trần Thị Lan"
+                                           Foreground="White"
+                                           FontWeight="Bold"/>
+
+                                <TextBlock Text="Nhân viên marketing, Hà Nội"
+                                           Foreground="#CFEAF6"
+                                           FontSize="12"/>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </Border>
+
+            </Grid>
+        </Grid>
+
+        <!-- RIGHT SIDE -->
+        <Grid Grid.Column="1"
+              Background="White">
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+                <StackPanel Width="420"
+                            Margin="0,95,0,60"
+                            HorizontalAlignment="Center">
+
+                    <TextBlock Text="Chào mừng trở lại 👋"
+                               FontSize="31"
+                               FontWeight="Bold"
+                               Foreground="#132A3B"/>
+
+                    <TextBlock Text="Đăng nhập để quản lý tài chính của bạn"
+                               FontSize="14"
+                               Foreground="#8DA5B3"
+                               Margin="0,8,0,30"/>
+
+                    <!-- SOCIAL -->
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Height="48"
+                                Background="#FAFDFF"
+                                BorderBrush="#C5E4F4"
+                                BorderThickness="1"
+                                Content="G  Google"
+                                Foreground="#36556A"
+                                Cursor="Hand"/>
+
+                        <Button Grid.Column="2"
+                                Height="48"
+                                Background="#FAFDFF"
+                                BorderBrush="#C5E4F4"
+                                BorderThickness="1"
+                                Content="▣  Facebook"
+                                Foreground="#36556A"
+                                Cursor="Hand"/>
+                    </Grid>
+
+                    <!-- DIVIDER -->
+                    <Grid Margin="0,0,0,25">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Height="1"
+                                Background="#DCEBF3"
+                                VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="hoặc đăng nhập bằng email"
+                                   Margin="12,0"
+                                   Foreground="#A1B5C1"
+                                   FontSize="12"/>
+
+                        <Border Grid.Column="2"
+                                Height="1"
+                                Background="#DCEBF3"
+                                VerticalAlignment="Center"/>
+
+                    </Grid>
+
+                    <!-- EMAIL -->
+                    <TextBlock Text="Địa chỉ email"
+                               Foreground="#3E5A6D"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,8"/>
+
+                    <Border Height="50"
+                            CornerRadius="10"
+                            BorderBrush="#BEDFF0"
+                            BorderThickness="1"
+                            Background="#F8FCFE">
+
+                        <TextBox x:Name="txtEmail"
+                                 BorderThickness="0"
+                                 Background="Transparent"
+                                 Padding="14,10"
+                                 FontSize="14"
+                                 VerticalContentAlignment="Center"/>
+                    </Border>
+
+                    <!-- PASSWORD -->
+                    <TextBlock Text="Mật khẩu"
+                               Foreground="#3E5A6D"
+                               FontWeight="SemiBold"
+                               Margin="0,18,0,8"/>
+
+                    <Border Height="50"
+                            CornerRadius="10"
+                            BorderBrush="#BEDFF0"
+                            BorderThickness="1"
+                            Background="#F8FCFE">
+
+                        <PasswordBox x:Name="txtPassword"
+                                     BorderThickness="0"
+                                     Background="Transparent"
+                                     Padding="14,10"
+                                     FontSize="14"
+                                     VerticalContentAlignment="Center"/>
+                    </Border>
+
+                    <!-- REMEMBER / FORGOT -->
+                    <Grid Margin="0,14,0,0">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Content="Ghi nhớ đăng nhập"
+                                  Foreground="#7693A5"
+                                  VerticalAlignment="Center"/>
+
+                        <Button Grid.Column="1"
+                                Content="Quên mật khẩu?"
+                                HorizontalAlignment="Right"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#3FA2D3"
+                                Cursor="Hand"
+                                Click="ForgotPassword_Click"/>
+                    </Grid>
+
+                    <!-- LOGIN -->
+                    <Button Content="Đăng nhập"
+                            Height="52"
+                            Margin="0,28,0,0"
+                            Background="#4EA8D6"
+                            Foreground="White"
+                            BorderThickness="0"
+                            FontWeight="Bold"
+                            FontSize="15"
+                            Cursor="Hand"
+                            Click="Login_Click">
+
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="10">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+
+                    </Button>
+
+                    <!-- REGISTER -->
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0,25,0,0">
+
+                        <TextBlock Text="Chưa có tài khoản?"
+                                   Foreground="#819AA9"
+                                   VerticalAlignment="Center"/>
+
+                        <Button Content="Đăng ký ngay"
+                                Margin="4,0,0,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#3FA2D3"
+                                FontWeight="SemiBold"
+                                Cursor="Hand"
+                                Click="Register_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
+
+            </ScrollViewer>
+
+        </Grid>
+
+    </Grid>
+</UserControl>
