@@ -6,7 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resource/Styles.xaml"/>
+                <!-- Tạm ẩn dòng này để tránh lỗi XamlParseException -->
+                <!-- <ResourceDictionary Source="Resource/Styles.xaml"/> -->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
