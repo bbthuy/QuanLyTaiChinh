@@ -4,9 +4,140 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyTaiChinh.View"
+             xmlns:models="clr-namespace:QuanLyTaiChinh.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <StackPanel>
+
+        <!-- ===== TOP BAR ===== -->
+        <Grid Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="1" Content="+ Thêm giao dịch" Style="{StaticResource PrimaryButton}"
+            Command="{Binding AddTransactionCommand}" VerticalAlignment="Top"/>
+        </Grid>
+
+        <!-- ===== TÌM KIẾM + BỘ LỌC ===== -->
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,0,16" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="{StaticResource PageBg}" CornerRadius="10" Margin="0,0,16,0">
+                    <Grid>
+                        <TextBlock Text="🔍" Margin="14,0,0,0" VerticalAlignment="Center" FontSize="13" IsHitTestVisible="False"/>
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 Background="Transparent" BorderThickness="0" Padding="38,10,10,10"
+                                 VerticalContentAlignment="Center" FontSize="13"/>
+                        <TextBlock Text="Tìm kiếm giao dịch..." Margin="38,0,0,0" VerticalAlignment="Center"
+                                   Foreground="{StaticResource TextGray}" FontSize="13" IsHitTestVisible="False">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SearchText}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <RadioButton Style="{StaticResource FilterPill}" Content="Tất cả"
+                                 Command="{Binding SetFilterCommand}" CommandParameter="Tất cả"
+                                 IsChecked="{Binding SelectedFilter, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Tất cả, Mode=OneWay}"/>
+                    <RadioButton Style="{StaticResource FilterPill}" Content="Thu nhập"
+                                 Command="{Binding SetFilterCommand}" CommandParameter="Thu nhập"
+                                 IsChecked="{Binding SelectedFilter, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Thu nhập, Mode=OneWay}"/>
+                    <RadioButton Style="{StaticResource FilterPill}" Content="Chi tiêu"
+                                 Command="{Binding SetFilterCommand}" CommandParameter="Chi tiêu"
+                                 IsChecked="{Binding SelectedFilter, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Chi tiêu, Mode=OneWay}"/>
+                    <RadioButton Style="{StaticResource FilterPill}" Content="Tiết kiệm"
+                                 Command="{Binding SetFilterCommand}" CommandParameter="Tiết kiệm"
+                                 IsChecked="{Binding SelectedFilter, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Tiết kiệm, Mode=OneWay}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ===== BẢNG GIAO DỊCH ===== -->
+        <Border Style="{StaticResource CardStyle}" Padding="0">
+            <StackPanel>
+
+                <!-- Header cột -->
+                <Grid Margin="24,16,24,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2.5*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="GIAO DỊCH" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Grid.Column="1" Text="DANH MỤC" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Grid.Column="2" Text="NGÀY" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Grid.Column="3" Text="SỐ TIỀN" Style="{StaticResource StatLabelStyle}" HorizontalAlignment="Right"/>
+                </Grid>
+
+                <ItemsControl x:Name="TransactionsList" ItemsSource="{Binding FilteredTransactions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:TransactionItem}">
+                            <Border BorderBrush="{StaticResource PageBg}" BorderThickness="0,1,0,0" Padding="24,14">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2.5*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="70"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="36" Height="36" CornerRadius="10"
+                                                Background="{StaticResource CardBlueBg}" Margin="0,0,12,0">
+                                            <TextBlock Text="{Binding Icon}" FontSize="16"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" FontSize="13.5"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1" Text="{Binding Category}"
+                                               Foreground="#60A5FA" VerticalAlignment="Center" FontSize="13"/>
+
+                                    <TextBlock Grid.Column="2" Text="{Binding Date, StringFormat=dd/MM/yyyy}"
+                                               Foreground="{StaticResource TextGray}" VerticalAlignment="Center" FontSize="13"/>
+
+                                    <TextBlock Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                               FontWeight="Bold" FontSize="13.5"
+                                               Text="{Binding Converter={StaticResource TransactionAmountConverter}}"
+                                               Foreground="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"/>
+
+                                    <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="✏️" Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                Margin="0,0,6,0" ToolTip="Sửa"
+                                                Command="{Binding DataContext.EditTransactionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
+                                        <Button Content="🗑️" Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                                ToolTip="Xóa"
+                                                Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
 </UserControl>

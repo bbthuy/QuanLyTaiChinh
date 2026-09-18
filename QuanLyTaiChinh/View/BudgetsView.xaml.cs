@@ -1,5 +1,5 @@
-﻿using QuanLyTaiChinh.View;
-using QuanLyTaiChinh.ViewModels;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,17 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTaiChinh
+namespace QuanLyTaiChinh.View
 {
- 
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for BudgetsView.xaml
+    /// </summary>
+    public partial class BudgetsView : UserControl
     {
-        public MainWindow()
+        public BudgetsView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
-
-
     }
 }
