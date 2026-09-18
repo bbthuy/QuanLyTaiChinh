@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+<<<<<<< HEAD
         xmlns:local="clr-namespace:QuanLyTaiChinh"
                 Width="1200"
         Height="720"
@@ -12,5 +13,15 @@
     <Grid>
         <ContentControl x:Name="MainContent"/>
     </Grid>
+=======
+        xmlns:views="clr-namespace:QuanLyTaiChinh.View"
+        mc:Ignorable="d"
+        Title="Quản lý tài chính" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
+
+	<Grid>
+		<!-- Khai báo dòng này để gọi giao diện AnalyticsView ra giữa màn hình -->
+		<views:AnalyticsView />
+	</Grid>
+>>>>>>> origin/main
 
 </Window>
