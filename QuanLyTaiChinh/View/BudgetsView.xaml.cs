@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace QuanLyTaiChinh.View.Dashboard
+namespace QuanLyTaiChinh.View
 {
     /// <summary>
-    /// Interaction logic for DashboardView.xaml
+    /// Interaction logic for BudgetsView.xaml
     /// </summary>
-    public partial class DashboardView : UserControl
+    public partial class BudgetsView : UserControl
     {
-        public DashboardView()
+        public BudgetsView()
         {
             InitializeComponent();
         }

@@ -1,32 +1,51 @@
-﻿using QuanLyTaiChinh.View.Auth;
-using System.Text;
+using QuanLyTaiChinh.View.Auth;
+using QuanLyTaiChinh.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuanLyTaiChinh
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
 
-            Navigate(new LoginView());
+            ShowLogin();
         }
 
         public void Navigate(UserControl view)
         {
-            MainContent.Content = view;
+            AppShell.Visibility = Visibility.Collapsed;
+
+            AuthHost.Visibility = Visibility.Visible;
+            AuthHost.Content = view;
+        }
+
+        public void ShowLogin()
+        {
+            DataContext = null;
+            Navigate(new LoginView());
+        }
+
+        public void ShowMainApp()
+        {
+            AuthHost.Content = null;
+            AuthHost.Visibility = Visibility.Collapsed;
+
+            DataContext = new MainViewModel();
+
+            AppShell.Visibility = Visibility.Visible;
+        }
+
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            Navigate(new ChangePasswordView());
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLogin();
         }
     }
 }

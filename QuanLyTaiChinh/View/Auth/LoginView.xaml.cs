@@ -1,5 +1,4 @@
-﻿using QuanLyTaiChinh.View.Dashboard;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -31,7 +30,7 @@ namespace QuanLyTaiChinh.View.Auth
 
             if (mainWindow != null)
             {
-                mainWindow.MainContent.Content = new RegisterView();
+                mainWindow.Navigate(new RegisterView());
             }
         }
 
@@ -42,7 +41,7 @@ namespace QuanLyTaiChinh.View.Auth
 
             if (mainWindow != null)
             {
-                mainWindow.MainContent.Content = new ForgotPasswordView();
+                mainWindow.Navigate(new ForgotPasswordView());
             }
         }
 
@@ -53,7 +52,7 @@ namespace QuanLyTaiChinh.View.Auth
 
             if (mainWindow != null)
             {
-                mainWindow.MainContent.Content = new DashboardView();
+                mainWindow.ShowMainApp();
             }
         }
     }
