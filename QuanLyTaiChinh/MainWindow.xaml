@@ -4,9 +4,240 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyTaiChinh"
+        xmlns:vm="clr-namespace:QuanLyTaiChinh.ViewModels"
+        xmlns:views="clr-namespace:QuanLyTaiChinh.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="FinanceWise"
+        Height="850"
+        Width="1440"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource PageBg}">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:TransactionsViewModel}">
+            <views:TransactionsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:BudgetsViewModel}">
+            <views:BudgetsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:AnalyticsViewModel}">
+            <views:AnalyticsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:SavingGoalsViewModel}">
+            <views:SavingGoalsView/>
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
 
+        <ContentControl x:Name="AuthHost"
+                    Panel.ZIndex="10"/>
+
+        <Grid x:Name="AppShell"
+          Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Background="{StaticResource SidebarBg}">
+            <StackPanel Margin="20">
+
+                <StackPanel Orientation="Horizontal" Margin="4,10,0,30">
+                    <Border Width="40" Height="40"
+                            CornerRadius="10"
+                            Background="{StaticResource ColorPrimary}">
+                        <TextBlock Text="$"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="FinanceWise"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextDark}"/>
+                        <TextBlock Text="Quản lý tài chính"
+                                   FontSize="11"
+                                   Style="{StaticResource PageSubtitleStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="MENU"
+                           FontSize="11"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource TextGray}"
+                           Margin="14,0,0,10"/>
+
+                <RadioButton Style="{StaticResource SidebarNavItem}"
+                             Command="{Binding NavigateCommand}"
+                             CommandParameter="Dashboard"
+                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Dashboard, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📊" Margin="0,0,10,0"/>
+                        <TextBlock Text="Tổng quan" Style="{StaticResource SidebarNavText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource SidebarNavItem}"
+                             Command="{Binding NavigateCommand}"
+                             CommandParameter="Transactions"
+                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Transactions, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="↕️" Margin="0,0,10,0"/>
+                        <TextBlock Text="Giao dịch" Style="{StaticResource SidebarNavText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource SidebarNavItem}"
+                             Command="{Binding NavigateCommand}"
+                             CommandParameter="Budgets"
+                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Budgets, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🕐" Margin="0,0,10,0"/>
+                        <TextBlock Text="Ngân sách" Style="{StaticResource SidebarNavText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource SidebarNavItem}"
+                             Command="{Binding NavigateCommand}"
+                             CommandParameter="Analytics"
+                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Analytics, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📈" Margin="0,0,10,0"/>
+                        <TextBlock Text="Phân tích" Style="{StaticResource SidebarNavText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+                <RadioButton Style="{StaticResource SidebarNavItem}"
+                             Command="{Binding NavigateCommand}"
+                             CommandParameter="SavingGoals"
+                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=SavingGoals, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🎯" Margin="0,0,10,0"/>
+                        <TextBlock Text="Mục tiêu" Style="{StaticResource SidebarNavText}"/>
+                    </StackPanel>
+                </RadioButton>
+
+            </StackPanel>
+        </Border>
+
+        <!-- MAIN -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- TOP BAR -->
+            <Border Grid.Row="0"
+                    Background="White"
+                    BorderBrush="{StaticResource PageBg}"
+                    BorderThickness="0,0,0,1">
+
+                <DockPanel LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <Grid Margin="0,0,14,0">
+                            <ToggleButton x:Name="BtnNotification"
+                                          Style="{StaticResource IconToggleButton}">
+                                <TextBlock Text="🔔" FontSize="16"/>
+                            </ToggleButton>
+
+                            <Popup IsOpen="{Binding IsChecked, ElementName=BtnNotification}"
+                                   StaysOpen="False"
+                                   Placement="Bottom"
+                                   PlacementTarget="{Binding ElementName=BtnNotification}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade">
+                                <Border Width="280"
+                                        Margin="0,8,0,0"
+                                        Style="{StaticResource PopupCardStyle}">
+                                    <ListView/>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Grid Margin="0,0,15,0">
+                            <ToggleButton x:Name="BtnProfile"
+                                          Style="{StaticResource AvatarToggleButton}">
+                                <TextBlock Text="T"
+                                           FontSize="16"
+                                           FontWeight="Bold"
+                                           Foreground="White"/>
+                            </ToggleButton>
+
+                            <Popup IsOpen="{Binding IsChecked, ElementName=BtnProfile}"
+                                   StaysOpen="False"
+                                   Placement="Bottom"
+                                   PlacementTarget="{Binding ElementName=BtnProfile}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade">
+
+                                <Border Width="200"
+                                        Margin="0,8,0,0"
+                                        Style="{StaticResource PopupCardStyle}">
+                                    <StackPanel>
+
+                                        <StackPanel Margin="10,6,10,8">
+                                            <TextBlock Text="Bích Thủy"
+                                                       FontSize="14"
+                                                       FontWeight="Bold"
+                                                       Foreground="{StaticResource TextDark}"/>
+                                            <TextBlock Text="thuy@example.com"
+                                                       FontSize="11"
+                                                       Foreground="{StaticResource TextGray}"/>
+                                        </StackPanel>
+
+                                        <Separator Background="{StaticResource PageBg}"
+                                                   Margin="0,0,0,4"/>
+
+                                            <Button Style="{StaticResource MenuItemButton}"
+                                                    Click="ChangePassword_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="🔒" Margin="0,0,10,0"/>
+                                                    <TextBlock Text="Đổi mật khẩu"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Separator Background="{StaticResource PageBg}" Margin="0,4"/>
+                                            <Button Style="{StaticResource MenuItemButton}"
+                                                    Click="Logout_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="🚪" Margin="0,0,10,0"/>
+                                                    <TextBlock Text="Đăng xuất"
+                                                               Foreground="#EF4444"
+                                                               FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                        </StackPanel>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <ContentControl x:Name="MainContent"
+                            Grid.Row="1"
+                            Content="{Binding CurrentViewModel}"
+                            Margin="10"/>
+        </Grid>
+        </Grid>
     </Grid>
 </Window>

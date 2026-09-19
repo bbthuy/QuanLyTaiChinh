@@ -1,12 +1,142 @@
 ﻿<UserControl x:Class="QuanLyTaiChinh.View.AnalyticsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuanLyTaiChinh.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:viewmodels="clr-namespace:QuanLyTaiChinh.ViewModels"
+             Background="#F8FAFC">
+
+	<UserControl.DataContext>
+		<viewmodels:AnalyticsViewModel/>
+	</UserControl.DataContext>
+
+	<Grid Margin="30">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="45*"/>
+			<RowDefinition Height="55*"/>
+		</Grid.RowDefinitions>
+
+		<!-- HEADER -->
+		<Grid Grid.Row="0" Margin="0,0,0,25">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="Phân tích" FontSize="28" FontWeight="Bold" Foreground="#0F172A"/>
+				<TextBlock Text="Tháng 9, 2026" FontSize="14" Foreground="#64748B" Margin="0,5,0,0"/>
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+				<Button Content="🔔" Background="White" BorderBrush="#E2E8F0" Foreground="#64748B" Width="42" Height="42" Margin="0,0,15,0">
+					<Button.Resources>
+						<Style TargetType="Border">
+							<Setter Property="CornerRadius" Value="21"/>
+						</Style>
+					</Button.Resources>
+				</Button>
+				<Button Content="+ Thêm giao dịch" Background="#38BDF8" Foreground="White" FontWeight="SemiBold" FontSize="14" Padding="20,0" Height="42">
+					<Button.Resources>
+						<Style TargetType="Border">
+							<Setter Property="CornerRadius" Value="8"/>
+						</Style>
+					</Button.Resources>
+				</Button>
+			</StackPanel>
+		</Grid>
+
+		<!-- HÀNG 1: LINE CHART & DANH MỤC -->
+		<Grid Grid.Row="1" Margin="0,0,0,20">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="6*"/>
+				<ColumnDefinition Width="4*"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Xu hướng tiết kiệm -->
+			<Border Grid.Column="0" Background="White" CornerRadius="16" Margin="0,0,10,0" Padding="24">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="0" Margin="0,0,0,15">
+						<TextBlock Text="Xu hướng tiết kiệm" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+						<TextBlock Text="Tỷ lệ tiết kiệm 9 tháng" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
+					</StackPanel>
+
+					<lvc:CartesianChart Grid.Row="1"
+                                        Series="{Binding SavingsSeries}"
+                                        XAxes="{Binding SavingsXAxes}"
+                                        TooltipPosition="Top" />
+				</Grid>
+			</Border>
+
+			<!-- Phân tích danh mục -->
+			<Border Grid.Column="1" Background="White" CornerRadius="16" Margin="10,0,0,0" Padding="24">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="0" Margin="0,0,0,20">
+						<TextBlock Text="Phân tích danh mục" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+						<TextBlock Text="Chi tiết chi tiêu T9" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0"/>
+					</StackPanel>
+
+					<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+						<ItemsControl ItemsSource="{Binding Categories}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid Margin="0,0,0,18">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto"/>
+											<RowDefinition Height="Auto"/>
+										</Grid.RowDefinitions>
+
+										<TextBlock Grid.Row="0" Text="{Binding Name}" Foreground="#334155" FontWeight="Medium" HorizontalAlignment="Left"/>
+										<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+											<TextBlock Text="{Binding Percentage, StringFormat={}{0}%}" Foreground="#94A3B8" FontSize="12"/>
+											<TextBlock Text="  •  " Foreground="#E2E8F0" FontSize="12"/>
+											<TextBlock Text="{Binding AmountText}" Foreground="#64748B" FontSize="12"/>
+										</StackPanel>
+
+										<ProgressBar Grid.Row="1"
+                                                     Value="{Binding Percentage}"
+                                                     Maximum="100"
+                                                     Height="8"
+                                                     Margin="0,10,0,0"
+                                                     BorderThickness="0"
+                                                     Background="#F1F5F9"
+                                                     Foreground="{Binding ColorHex}">
+											<ProgressBar.Resources>
+												<Style TargetType="Border">
+													<Setter Property="CornerRadius" Value="4"/>
+												</Style>
+											</ProgressBar.Resources>
+										</ProgressBar>
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+				</Grid>
+			</Border>
+		</Grid>
+
+		<!-- HÀNG 2: BAR CHART -->
+		<Border Grid.Row="2" Background="White" CornerRadius="16" Padding="24">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0" Text="Thu nhập vs Chi tiêu — Tổng quan năm 2026"
+                           FontSize="18" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,20"/>
+
+				<lvc:CartesianChart Grid.Row="1"
+                                    Series="{Binding IncomeExpenseSeries}"
+                                    XAxes="{Binding IncomeExpenseXAxes}"
+                                    LegendPosition="Top" />
+			</Grid>
+		</Border>
+	</Grid>
 </UserControl>
