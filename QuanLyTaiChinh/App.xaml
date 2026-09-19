@@ -4,8 +4,10 @@
              xmlns:local="clr-namespace:QuanLyTaiChinh"
              xmlns:conv="clr-namespace:QuanLyTaiChinh.Converters"
              StartupUri="MainWindow.xaml">
+
     <Application.Resources>
         <ResourceDictionary>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -13,8 +15,11 @@
             <conv:StringEqualsConverter x:Key="StringEqualsConverter"/>
             <conv:TransactionAmountConverter x:Key="TransactionAmountConverter"/>
             <conv:TransactionTypeColorConverter x:Key="TransactionTypeColorConverter"/>
+
             <conv:GoalColorConverter x:Key="GoalColorConverter"/>
             <conv:PercentToGridLengthConverter x:Key="PercentToGridLengthConverter"/>
+
         </ResourceDictionary>
     </Application.Resources>
+
 </Application>
