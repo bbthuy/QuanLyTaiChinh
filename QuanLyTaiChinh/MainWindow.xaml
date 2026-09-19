@@ -213,14 +213,7 @@
                                                 </StackPanel>
                                             </Button>
 
-                                            <Button Style="{StaticResource MenuItemButton}">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="🔒" Margin="0,0,10,0"/>
-                                                <TextBlock Text="Đổi mật khẩu"/>
-                                            </StackPanel>
-                                        </Button>
-
-                                        <Separator Background="{StaticResource PageBg}" Margin="0,4"/>
+                                            <Separator Background="{StaticResource PageBg}" Margin="0,4"/>
                                             <Button Style="{StaticResource MenuItemButton}"
                                                     Click="Logout_Click">
                                                 <StackPanel Orientation="Horizontal">

@@ -28,5 +28,10 @@ namespace QuanLyTaiChinh.View.Auth
             ((MainWindow)Application.Current.MainWindow)
                 .Navigate(new ResetPasswordView());
         }
+
+        private void Verify_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

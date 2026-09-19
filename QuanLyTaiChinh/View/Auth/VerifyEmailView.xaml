@@ -71,14 +71,56 @@
                            Margin="0,12,0,0"/>
 
                 <Button Content="Xác nhận"
-                        Height="50"
-                        Margin="0,25,0,0"
-                        BorderThickness="0"
-                        Background="#4DA5D2"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        Cursor="Hand"
-                        Click="Verify_Click"/>
+        Height="50"
+        Margin="0,26,0,0"
+        Foreground="White"
+        BorderThickness="0"
+        FontWeight="Bold"
+        FontSize="15"
+        Cursor="Hand"
+        Click="Verify_Click">
+
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="#7DC8E8"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+
+                                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="25">
+
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="#64B8DE"/>
+                                            </Trigger>
+
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter TargetName="ButtonBorder"
+                                        Property="Background"
+                                        Value="#4FA3CC"/>
+                                            </Trigger>
+
+                                        </ControlTemplate.Triggers>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                        </Style>
+                    </Button.Style>
+
+                </Button>
+
 
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"

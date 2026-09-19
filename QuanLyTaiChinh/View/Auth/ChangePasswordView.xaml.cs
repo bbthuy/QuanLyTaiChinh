@@ -65,9 +65,13 @@ namespace QuanLyTaiChinh.View.Auth
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            // Tạm thời quay về Dashboard
-            ((MainWindow)Application.Current.MainWindow)
-                .Navigate(new QuanLyTaiChinh.View.Dashboard.DashboardView());
+            MainWindow mainWindow =
+                Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                mainWindow.ShowMainApp();
+            }
         }
     }
 }

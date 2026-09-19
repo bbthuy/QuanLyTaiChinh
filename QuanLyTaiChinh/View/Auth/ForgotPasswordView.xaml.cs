@@ -1,21 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace QuanLyTaiChinh.View.Auth
 {
-    /// <summary>
-    /// Interaction logic for ForgotPasswordView.xaml
-    /// </summary>
     public partial class ForgotPasswordView : UserControl
     {
         public ForgotPasswordView()
@@ -25,14 +12,30 @@ namespace QuanLyTaiChinh.View.Auth
 
         private void SendOtp_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow)
-                .Navigate(new VerifyResetCodeView());
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                MessageBox.Show("Vui lòng nhập email.");
+                return;
+            }
+
+            MainWindow mainWindow =
+                Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                mainWindow.Navigate(new VerifyResetCodeView());
+            }
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)Application.Current.MainWindow)
-                .Navigate(new LoginView());
+            MainWindow mainWindow =
+                Application.Current.MainWindow as MainWindow;
+
+            if (mainWindow != null)
+            {
+                mainWindow.Navigate(new LoginView());
+            }
         }
     }
 }
