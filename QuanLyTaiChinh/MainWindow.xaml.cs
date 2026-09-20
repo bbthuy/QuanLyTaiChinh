@@ -47,5 +47,10 @@ namespace QuanLyTaiChinh
         {
             ShowLogin();
         }
+
+        private void BtnNotification_Checked(object sender, RoutedEventArgs e)
+        {
+            (DataContext as MainViewModel)?.RefreshNotifications();
+        }
     }
 }

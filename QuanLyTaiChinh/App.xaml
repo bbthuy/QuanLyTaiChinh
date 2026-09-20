@@ -19,6 +19,9 @@
             <conv:GoalColorConverter x:Key="GoalColorConverter"/>
             <conv:PercentToGridLengthConverter x:Key="PercentToGridLengthConverter"/>
 
+            <conv:BudgetStatusColorConverter x:Key="BudgetStatusColorConverter"/>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 

@@ -1,0 +1,37 @@
+﻿<Window x:Class="QuanLyTaiChinh.View.BudgetEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Ngân sách" Height="420" Width="380"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{StaticResource PageBg}">
+
+    <StackPanel Margin="24">
+        <TextBlock Text="Danh mục" Style="{StaticResource StatLabelStyle}" Margin="0,0,0,6"/>
+        <ComboBox x:Name="CategoryCombo" Padding="10" Margin="0,0,0,14" IsEditable="True">
+            <ComboBoxItem Content="Ăn uống"/>
+            <ComboBoxItem Content="Di chuyển"/>
+            <ComboBoxItem Content="Mua sắm"/>
+            <ComboBoxItem Content="Giải trí"/>
+            <ComboBoxItem Content="Sức khỏe"/>
+            <ComboBoxItem Content="Hoá đơn"/>
+            <ComboBoxItem Content="Chi phí nghề"/>
+            <ComboBoxItem Content="Khác"/>
+        </ComboBox>
+
+        <TextBlock Text="Icon (emoji)" Style="{StaticResource StatLabelStyle}" Margin="0,0,0,6"/>
+        <TextBox x:Name="IconBox" Padding="10" Margin="0,0,0,14" Text="💰"/>
+
+        <TextBlock Text="Hạn mức tháng này (VNĐ)" Style="{StaticResource StatLabelStyle}" Margin="0,0,0,6"/>
+        <TextBox x:Name="LimitAmountBox" Padding="10" Margin="0,0,0,10"/>
+
+        <TextBlock x:Name="ErrorText" Foreground="{StaticResource TextRed}" FontSize="12"
+                   TextWrapping="Wrap" Margin="0,0,0,10" Visibility="Collapsed"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Hủy" Padding="16,8" Margin="0,0,10,0"
+                    Background="White" BorderBrush="#E5E7EB" BorderThickness="1"
+                    Click="Cancel_Click"/>
+            <Button Content="Lưu" Style="{StaticResource PrimaryButton}" Click="Save_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

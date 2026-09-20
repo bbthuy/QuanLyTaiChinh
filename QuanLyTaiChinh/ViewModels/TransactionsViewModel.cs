@@ -1,28 +1,16 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuanLyTaiChinh.Models;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Xml.Linq;
+using QuanLyTaiChinh.Services;
 
 namespace QuanLyTaiChinh.ViewModels
 {
     public partial class TransactionsViewModel : ObservableObject
     {
-        // TODO: thay bang du lieu that lay tu TransactionService/database sau nay
-        private readonly List<TransactionItem> _allTransactions = new()
-        {
-            new TransactionItem { Id = 1, Icon = "💼", Name = "Lương tháng 9",        Category = "Thu nhập",     Date = new DateTime(2026,9,15), Amount = 24000000, Type = TransactionType.Income  },
-            new TransactionItem { Id = 2, Icon = "🛒", Name = "Siêu thị VinMart",     Category = "Ăn uống",      Date = new DateTime(2026,9,14), Amount = 680000,   Type = TransactionType.Expense },
-            new TransactionItem { Id = 3, Icon = "☕", Name = "Grab Food",            Category = "Ăn uống",      Date = new DateTime(2026,9,13), Amount = 125000,   Type = TransactionType.Expense },
-            new TransactionItem { Id = 4, Icon = "🏦", Name = "Tiết kiệm tháng 9",    Category = "Tiết kiệm",    Date = new DateTime(2026,9,12), Amount = 4000000,  Type = TransactionType.Saving  },
-            new TransactionItem { Id = 5, Icon = "🎨", Name = "Freelance Design",     Category = "Thu nhập",     Date = new DateTime(2026,9,10), Amount = 3500000,  Type = TransactionType.Income  },
-            new TransactionItem { Id = 6, Icon = "🛵", Name = "Grab Bike",            Category = "Di chuyển",    Date = new DateTime(2026,9,10), Amount = 45000,    Type = TransactionType.Expense },
-            new TransactionItem { Id = 7, Icon = "🎬", Name = "Netflix Premium",      Category = "Giải trí",     Date = new DateTime(2026,9,9),  Amount = 260000,   Type = TransactionType.Expense },
-            new TransactionItem { Id = 8, Icon = "🏥", Name = "Phòng khám đa khoa",   Category = "Sức khỏe",     Date = new DateTime(2026,9,7),  Amount = 350000,   Type = TransactionType.Expense },
-            new TransactionItem { Id = 9, Icon = "☁️", Name = "Amazon Web Services",  Category = "Chi phí nghề", Date = new DateTime(2026,9,6),  Amount = 180000,   Type = TransactionType.Expense },
-        };
-
         [ObservableProperty]
         private ObservableCollection<TransactionItem> filteredTransactions = new();
 
@@ -42,7 +30,7 @@ namespace QuanLyTaiChinh.ViewModels
 
         private void Refresh()
         {
-            var query = _allTransactions.AsEnumerable();
+            var query = TransactionStore.Instance.Transactions.AsEnumerable();
 
             query = SelectedFilter switch
             {
@@ -72,8 +60,8 @@ namespace QuanLyTaiChinh.ViewModels
             if (window.ShowDialog() == true)
             {
                 var result = window.ResultTransaction;
-                result.Id = _allTransactions.Count == 0 ? 1 : _allTransactions.Max(t => t.Id) + 1;
-                _allTransactions.Add(result);
+                result.Id = TransactionStore.Instance.GetNextId();
+                TransactionStore.Instance.Transactions.Add(result);
                 Refresh();
                 // TODO: goi TransactionService.Add(result) de luu vao database
             }
@@ -107,7 +95,7 @@ namespace QuanLyTaiChinh.ViewModels
                                            MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (confirm == MessageBoxResult.Yes)
             {
-                _allTransactions.Remove(item);
+                TransactionStore.Instance.Transactions.Remove(item);
                 Refresh();
                 // TODO: goi TransactionService.Delete(item.Id) de xoa khoi database
             }

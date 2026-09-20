@@ -16,6 +16,10 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Mục tiêu tiết kiệm" Style="{StaticResource PageTitleStyle}"/>
+                <TextBlock Text="Tháng 9, 2026" Style="{StaticResource PageSubtitleStyle}"/>
+            </StackPanel>
             <Button Grid.Column="1" Content="+ Thêm giao dịch" Style="{StaticResource PrimaryButton}"
             Command="{Binding AddTransactionCommand}" VerticalAlignment="Top"/>
         </Grid>

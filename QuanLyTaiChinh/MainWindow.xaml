@@ -36,7 +36,7 @@
     </Window.Resources>
 
     <Grid>
-
+        
         <ContentControl x:Name="AuthHost"
                     Panel.ZIndex="10"/>
 
@@ -110,15 +110,7 @@
                     </StackPanel>
                 </RadioButton>
 
-                <RadioButton Style="{StaticResource SidebarNavItem}"
-                             Command="{Binding NavigateCommand}"
-                             CommandParameter="Analytics"
-                             IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Analytics, Mode=OneWay}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="📈" Margin="0,0,10,0"/>
-                        <TextBlock Text="Phân tích" Style="{StaticResource SidebarNavText}"/>
-                    </StackPanel>
-                </RadioButton>
+               
 
                 <RadioButton Style="{StaticResource SidebarNavItem}"
                              Command="{Binding NavigateCommand}"
@@ -151,27 +143,49 @@
                                 Orientation="Horizontal"
                                 VerticalAlignment="Center">
 
-                        <Grid Margin="0,0,14,0">
-                            <ToggleButton x:Name="BtnNotification"
-                                          Style="{StaticResource IconToggleButton}">
-                                <TextBlock Text="🔔" FontSize="16"/>
-                            </ToggleButton>
+                            <Grid Margin="0,0,14,0">
+                                <ToggleButton x:Name="BtnNotification"
+                  Style="{StaticResource IconToggleButton}"
+                  Checked="BtnNotification_Checked">
+                                    <TextBlock Text="🔔" FontSize="16"/>
+                                </ToggleButton>
 
-                            <Popup IsOpen="{Binding IsChecked, ElementName=BtnNotification}"
-                                   StaysOpen="False"
-                                   Placement="Bottom"
-                                   PlacementTarget="{Binding ElementName=BtnNotification}"
-                                   AllowsTransparency="True"
-                                   PopupAnimation="Fade">
-                                <Border Width="280"
-                                        Margin="0,8,0,0"
-                                        Style="{StaticResource PopupCardStyle}">
-                                    <ListView/>
-                                </Border>
-                            </Popup>
-                        </Grid>
+                                <Ellipse Width="9" Height="9" Fill="#EF4444" Stroke="White" StrokeThickness="1.5"
+             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0"
+             Visibility="{Binding HasNotifications, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                        <Grid Margin="0,0,15,0">
+                                <Popup IsOpen="{Binding IsChecked, ElementName=BtnNotification}"
+           StaysOpen="False"
+           Placement="Bottom"
+           PlacementTarget="{Binding ElementName=BtnNotification}"
+           AllowsTransparency="True"
+           PopupAnimation="Fade">
+                                    <Border Width="300"
+                Margin="0,8,0,0"
+                Style="{StaticResource PopupCardStyle}">
+                                        <StackPanel>
+                                            <TextBlock Text="Thông báo" FontWeight="Bold" FontSize="14" Margin="8,6,8,8"/>
+
+                                            <ItemsControl ItemsSource="{Binding Notifications}"
+                              Visibility="{Binding HasNotifications, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="{StaticResource PageBg}" BorderThickness="0,1,0,0" Padding="8,10">
+                                                            <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12.5"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <TextBlock Text="Không có cảnh báo nào" FontSize="12.5"
+                           Foreground="{StaticResource TextGray}" Margin="8,4,8,10"
+                           Visibility="{Binding HasNotifications, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+
+                            <Grid Margin="0,0,15,0">
                             <ToggleButton x:Name="BtnProfile"
                                           Style="{StaticResource AvatarToggleButton}">
                                 <TextBlock Text="T"
@@ -232,12 +246,15 @@
                     </StackPanel>
                 </DockPanel>
             </Border>
+                <ScrollViewer Grid.Row="1" Grid.Column="1"
+      VerticalScrollBarVisibility="Auto"
+      HorizontalScrollBarVisibility="Disabled">
+                    <ContentControl x:Name="MainContent"
+            Content="{Binding CurrentViewModel}"
+            Margin="10"/>
+                </ScrollViewer>
 
-            <ContentControl x:Name="MainContent"
-                            Grid.Row="1"
-                            Content="{Binding CurrentViewModel}"
-                            Margin="10"/>
-        </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
