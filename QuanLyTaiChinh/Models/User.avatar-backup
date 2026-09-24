@@ -21,7 +21,5 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
-    public byte[]? AvatarData { get; set; }
-
     public virtual ICollection<OtpCode> OtpCodes { get; set; } = new List<OtpCode>();
 }

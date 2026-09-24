@@ -22,6 +22,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.05*"/>
                     <ColumnDefinition Width="0.95*"/>
+
                 </Grid.ColumnDefinitions>
 
                 <!-- LEFT FORM -->
@@ -91,6 +92,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        
                                     </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0"
@@ -212,6 +214,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="30"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="36"/>
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Text="🔒"
@@ -220,11 +223,29 @@
                                                Foreground="#7C97A8"/>
 
                                     <PasswordBox x:Name="txtPassword"
+                                                 
                                                  Grid.Column="1"
                                                  BorderThickness="0"
                                                  Background="Transparent"
                                                  FontSize="14"
                                                  VerticalContentAlignment="Center"/>
+
+                                    <TextBox x:Name="txtPasswordVisible"
+                                             Grid.Column="1"
+                                             Visibility="Collapsed"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             FontSize="14"
+                                             VerticalContentAlignment="Center"
+                                             TextChanged="VisiblePassword_TextChanged"/>                                    
+                                    <Button x:Name="btnPasswordEye"
+                                            Grid.Column="2"
+                                            Content="👁"
+                                            ToolTip="Hiện mật khẩu"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Click="TogglePassword_Click"/>      
                                 </Grid>
                             </Border>
 
@@ -246,6 +267,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="30"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="36"/>
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Text="🔐"
@@ -259,6 +281,24 @@
                                                  Background="Transparent"
                                                  FontSize="14"
                                                  VerticalContentAlignment="Center"/>
+
+                                    <TextBox x:Name="txtConfirmPasswordVisible"
+                                             Grid.Column="1"
+                                             Visibility="Collapsed"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             FontSize="14"
+                                             VerticalContentAlignment="Center"
+                                             TextChanged="VisiblePassword_TextChanged"/>
+
+                                    <Button x:Name="btnConfirmEye"
+                                            Grid.Column="2"
+                                            Content="👁"
+                                            ToolTip="Hiện mật khẩu xác nhận"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Cursor="Hand"
+                                            Click="TogglePassword_Click"/>  
                                 </Grid>
                             </Border>
 
