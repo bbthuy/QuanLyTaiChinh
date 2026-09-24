@@ -1,41 +1,51 @@
-﻿using System.Windows;
+﻿using QuanLyTaiChinh.Services;
+using System.Windows;
 using System.Windows.Controls;
 
-namespace QuanLyTaiChinh.View.Auth
+namespace QuanLyTaiChinh.View.Auth;
+
+public partial class ForgotPasswordView : UserControl
 {
-    public partial class ForgotPasswordView : UserControl
+    public ForgotPasswordView()
     {
-        public ForgotPasswordView()
+        InitializeComponent();
+    }
+
+    private async void SendOtp_Click(object sender, RoutedEventArgs e)
+    {
+        string email = txtEmail.Text.Trim();
+
+        if (string.IsNullOrWhiteSpace(email))
         {
-            InitializeComponent();
+            AuthMessageWindow.ShowMessage("Vui lòng nhập email.");
+            return;
         }
 
-        private void SendOtp_Click(object sender, RoutedEventArgs e)
+        try
         {
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            var authService = new AuthService();
+            string? code = await authService.RequestPasswordResetAsync(email);
+
+            if (code != null)
             {
-                MessageBox.Show("Vui lòng nhập email.");
-                return;
+                await new EmailService().SendOtpAsync(
+                    email, code, "RESET_PASSWORD");
             }
 
-            MainWindow mainWindow =
-                Application.Current.MainWindow as MainWindow;
+            AuthMessageWindow.ShowMessage("Nếu email có tài khoản, mã xác nhận đã được gửi.");
 
-            if (mainWindow != null)
-            {
-                mainWindow.Navigate(new VerifyResetCodeView());
-            }
+            ((MainWindow)Application.Current.MainWindow)
+                .Navigate(new VerifyResetCodeView(email));
         }
-
-        private void Back_Click(object sender, RoutedEventArgs e)
+        catch (Exception ex)
         {
-            MainWindow mainWindow =
-                Application.Current.MainWindow as MainWindow;
-
-            if (mainWindow != null)
-            {
-                mainWindow.Navigate(new LoginView());
-            }
+            AuthMessageWindow.ShowMessage($"Không gửi được mã: {ex.Message}");
         }
+    }
+
+    private void Back_Click(object sender, RoutedEventArgs e)
+    {
+        ((MainWindow)Application.Current.MainWindow)
+            .Navigate(new LoginView());
     }
 }

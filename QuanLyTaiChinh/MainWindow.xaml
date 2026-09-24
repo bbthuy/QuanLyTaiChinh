@@ -188,11 +188,21 @@
                             <Grid Margin="0,0,15,0">
                             <ToggleButton x:Name="BtnProfile"
                                           Style="{StaticResource AvatarToggleButton}">
-                                <TextBlock Text="T"
-                                           FontSize="16"
-                                           FontWeight="Bold"
-                                           Foreground="White"/>
-                            </ToggleButton>
+                                    <Grid Width="44" Height="44">
+                                        <TextBlock x:Name="txtAvatarInitial"
+               Text="T"
+               FontSize="16"
+               FontWeight="Bold"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+
+                                        <Ellipse x:Name="AvatarPhoto"
+             Width="44"
+             Height="44"
+             Visibility="Collapsed"/>
+                                    </Grid>
+                                </ToggleButton>
 
                             <Popup IsOpen="{Binding IsChecked, ElementName=BtnProfile}"
                                    StaysOpen="False"
@@ -207,23 +217,38 @@
                                     <StackPanel>
 
                                         <StackPanel Margin="10,6,10,8">
-                                            <TextBlock Text="Bích Thủy"
+                                                <TextBlock x:Name="txtProfileName"
                                                        FontSize="14"
                                                        FontWeight="Bold"
                                                        Foreground="{StaticResource TextDark}"/>
-                                            <TextBlock Text="thuy@example.com"
+                                                <TextBlock x:Name="txtProfileEmail" 
                                                        FontSize="11"
                                                        Foreground="{StaticResource TextGray}"/>
                                         </StackPanel>
 
                                         <Separator Background="{StaticResource PageBg}"
                                                    Margin="0,0,0,4"/>
+                                            <Button Style="{StaticResource MenuItemButton}"
+                                                    Click="EditProfile_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="👤" Margin="0,0,10,0"/>
+                                                    <TextBlock Text="Chỉnh sửa thông tin"/>
+                                                </StackPanel>
+                                            </Button>
 
                                             <Button Style="{StaticResource MenuItemButton}"
                                                     Click="ChangePassword_Click">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="🔒" Margin="0,0,10,0"/>
                                                     <TextBlock Text="Đổi mật khẩu"/>
+                                                </StackPanel>
+                                            </Button>
+
+                                            <Button Style="{StaticResource MenuItemButton}"
+                                                    Click="EditProfile_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="👤" Margin="0,0,10,0"/>
+                                                    <TextBlock Text="Chỉnh sửa thông tin"/>
                                                 </StackPanel>
                                             </Button>
 

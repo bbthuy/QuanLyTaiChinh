@@ -65,7 +65,8 @@
                              VerticalContentAlignment="Center"/>
                 </Border>
 
-                <TextBlock Text="Mã có hiệu lực trong 05:00"
+                <TextBlock x:Name="txtCountdown"
+                           Text="Đang tải thời gian..."
                            Foreground="#94AAB8"
                            HorizontalAlignment="Center"
                            Margin="0,12,0,0"/>
@@ -130,12 +131,13 @@
                                Foreground="#829AA9"/>
 
                     <Button Content="Gửi lại mã"
-                            Margin="5,0,0,0"
-                            BorderThickness="0"
-                            Background="Transparent"
-                            Foreground="#3E9DCE"
-                            FontWeight="SemiBold"
-                            Cursor="Hand"/>
+        Click="Resend_Click"
+        Margin="5,0,0,0"
+        BorderThickness="0"
+        Background="Transparent"
+        Foreground="#3E9DCE"
+        FontWeight="SemiBold"
+        Cursor="Hand"/>
                 </StackPanel>
 
                 <Button Content="← Quay lại đăng nhập"
