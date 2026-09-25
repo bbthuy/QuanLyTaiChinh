@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using QuanLyTaiChinh.Models;
 using QuanLyTaiChinh.Services;
+using QuanLyTaiChinh.ViewModels;
 using System.Windows.Controls;
 
 
@@ -17,6 +18,7 @@ namespace QuanLyTaiChinh.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasNotifications))]
         private ObservableCollection<string> notifications = new();
+        public ChatbotViewModel Chatbot { get; } = new();
 
         public bool HasNotifications => Notifications.Count > 0;
 
@@ -44,7 +46,9 @@ namespace QuanLyTaiChinh.ViewModels
         [RelayCommand]
         private void Navigate(string menu)
         {
+            Chatbot.ShowGreeting();
             SelectedMenu = menu;
+
 
             CurrentViewModel = menu switch
             {

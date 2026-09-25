@@ -240,4 +240,71 @@
         </Setter>
     </Style>
 
+    <!-- ===== CHATBOT ===== -->
+
+    <!-- Nut linh vat tron, noi bat -->
+    <Style x:Key="MascotButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="64"/>
+        <Setter Property="Height" Value="64"/>
+        <Setter Property="Background" Value="{StaticResource ColorPrimary}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="32" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Bong bao chat: tin cua Bot (trai, nen xam nhat) -->
+    <Style x:Key="BotBubbleStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource PageBg}"/>
+        <Setter Property="CornerRadius" Value="14,14,14,2"/>
+        <Setter Property="Padding" Value="12,9"/>
+        <Setter Property="Margin" Value="0,4,60,4"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <!-- Bong bao chat: tin cua nguoi dung (phai, nen xanh) -->
+    <Style x:Key="UserBubbleStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource ColorPrimary}"/>
+        <Setter Property="CornerRadius" Value="14,14,2,14"/>
+        <Setter Property="Padding" Value="12,9"/>
+        <Setter Property="Margin" Value="60,4,0,4"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+    </Style>
+
+    <!-- Nut cau hoi co dinh (dang o duoi khung chat) -->
+    <Style x:Key="PresetQuestionButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource PageBg}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,10"/>
+        <Setter Property="Margin" Value="4"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="FontSize" Value="12.5"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="10" Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{StaticResource CardBlueBg}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>

@@ -37,6 +37,7 @@
 
     <Grid>
         
+        
         <ContentControl x:Name="AuthHost"
                     Panel.ZIndex="10"/>
 
@@ -44,8 +45,9 @@
           Visibility="Collapsed">
             <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
 
         <!-- SIDEBAR -->
         <Border Grid.Column="0" Background="{StaticResource SidebarBg}">
@@ -253,8 +255,12 @@
             Content="{Binding CurrentViewModel}"
             Margin="10"/>
                 </ScrollViewer>
+            
 
             </Grid>
+            <views:ChatbotWidget DataContext="{Binding Chatbot}"
+                      Grid.ColumnSpan="2"
+                      Panel.ZIndex="20"/>
         </Grid>
     </Grid>
 </Window>
