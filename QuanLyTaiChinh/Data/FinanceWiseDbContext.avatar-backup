@@ -2,39 +2,22 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using QuanLyTaiChinh.Models;
-using QuanLyTaiChinh.Data.Entities;
-
 
 namespace QuanLyTaiChinh.Data;
 
 public partial class FinanceWiseDbContext : DbContext
 {
-    public FinanceWiseDbContext()
-    {
-    }
-
     public FinanceWiseDbContext(DbContextOptions<FinanceWiseDbContext> options)
         : base(options)
     {
     }
-    public DbSet<TransactionEntity> Transactions { get; set; }
-    public DbSet<BudgetEntity> Budgets { get; set; }
-    public DbSet<SavingGoalEntity> SavingGoals { get; set; }
+
     public virtual DbSet<OtpCode> OtpCodes { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\MSSQLLocalDB;Database=FinanceWiseDB;Trusted_Connection=True;TrustServerCertificate=True;");
-        }
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         modelBuilder.Entity<OtpCode>(entity =>
         {
             entity.HasKey(e => e.OtpId).HasName("PK__OtpCodes__3143C4A3CD53E5E7");
@@ -71,26 +54,7 @@ public partial class FinanceWiseDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
         });
-        base.OnModelCreating(modelBuilder);
 
-        
-        modelBuilder.Entity<TransactionEntity>()
-            .HasOne<QuanLyTaiChinh.Models.User>()
-            .WithMany()
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<BudgetEntity>()
-            .HasOne<QuanLyTaiChinh.Models.User>()
-            .WithMany()
-            .HasForeignKey(b => b.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<SavingGoalEntity>()
-            .HasOne<QuanLyTaiChinh.Models.User>()
-            .WithMany()
-            .HasForeignKey(g => g.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
         OnModelCreatingPartial(modelBuilder);
     }
 

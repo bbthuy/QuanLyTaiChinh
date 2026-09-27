@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using QuanLyTaiChinh.Models;
 
 namespace QuanLyTaiChinh.Services
@@ -8,15 +9,34 @@ namespace QuanLyTaiChinh.Services
         private static BudgetStore? _instance;
         public static BudgetStore Instance => _instance ??= new BudgetStore();
 
+        private readonly BudgetService _service = new();
+
         public ObservableCollection<BudgetItem> Budgets { get; } = new();
 
-        private BudgetStore()
+        private BudgetStore() { }
+
+        public async Task LoadFromDatabaseAsync()
         {
-            // TODO: thay bang du lieu that (han muc nguoi dung tu dat) lay tu database
-            Budgets.Add(new BudgetItem { Id = 1, Icon = "🍜", Category = "Ăn uống", LimitAmount = 3000000 });
-            Budgets.Add(new BudgetItem { Id = 2, Icon = "🛵", Category = "Di chuyển", LimitAmount = 800000 });
-            Budgets.Add(new BudgetItem { Id = 3, Icon = "🎬", Category = "Giải trí", LimitAmount = 500000 });
-            Budgets.Add(new BudgetItem { Id = 4, Icon = "🏥", Category = "Sức khỏe", LimitAmount = 1000000 });
+            Budgets.Clear();
+            foreach (var b in await _service.GetAllAsync())
+                Budgets.Add(b);
+        }
+
+        public async Task AddAsync(BudgetItem item)
+        {
+            await _service.AddAsync(item);
+            Budgets.Add(item);
+        }
+
+        public async Task UpdateAsync(BudgetItem item)
+        {
+            await _service.UpdateAsync(item);
+        }
+
+        public async Task DeleteAsync(BudgetItem item)
+        {
+            await _service.DeleteAsync(item.Id);
+            Budgets.Remove(item);
         }
     }
 }

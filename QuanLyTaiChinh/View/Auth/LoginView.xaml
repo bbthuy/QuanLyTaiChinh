@@ -121,12 +121,12 @@
                                            VerticalAlignment="Center"
                                            FontSize="16"
                                            Foreground="#6B7280"/>
-                                <TextBox Grid.Column="1"
+                                <TextBox x:Name="txtEmail"
+                                         Grid.Column="1"
                                          BorderThickness="0"
                                          Background="Transparent"
                                          FontSize="15"
-                                         VerticalContentAlignment="Center"
-                                         Text="minh@email.com"/>
+                                         VerticalContentAlignment="Center"/>
                             </Grid>
                         </Border>
 
@@ -151,39 +151,39 @@
                                            VerticalAlignment="Center"
                                            FontSize="16"
                                            Foreground="#6B7280"/>
-                                <PasswordBox Grid.Column="1"
+                                <PasswordBox x:Name="txtPassword"
+                                             Grid.Column="1"
                                              BorderThickness="0"
                                              Background="Transparent"
                                              FontSize="15"
                                              VerticalContentAlignment="Center"/>
-                                <TextBlock Grid.Column="2"
-                                           Text="👁"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Foreground="#9CA3AF"/>
+                                <TextBox x:Name="txtPasswordVisible"
+                                         Grid.Column="1"
+                                         Visibility="Collapsed"
+                                         BorderThickness="0"
+                                         Background="Transparent"
+                                         FontSize="15"
+                                         VerticalContentAlignment="Center"
+                                         TextChanged="VisiblePassword_TextChanged"/>
+                                <Button x:Name="btnEye"
+                                        Grid.Column="2"
+                                        Content="👁"
+                                        ToolTip="Hiện mật khẩu"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Cursor="Hand"
+                                        Click="TogglePassword_Click"/>  
                             </Grid>
                         </Border>
 
                         <!-- Remember / Forgot -->
-                        <Grid Margin="0,0,0,24">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-
-                            <CheckBox Content="Ghi nhớ đăng nhập"
-                                      VerticalAlignment="Center"
-                                      Foreground="#6B7280"/>
-
-                            <TextBlock Grid.Column="1"
-                                       Text="Quên mật khẩu?"
-                                       Foreground="#7DC8E8"
-                                       FontWeight="SemiBold"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Cursor="Hand"
-                                       MouseDown="ForgotPassword_Click"/> 
-                        </Grid>
+                        <TextBlock Text="Quên mật khẩu?"
+           Margin="0,0,0,24"
+           Foreground="#7DC8E8"
+           FontWeight="SemiBold"
+           HorizontalAlignment="Right"
+           Cursor="Hand"
+           MouseDown="ForgotPassword_Click"/>
 
                         <!-- Login button -->
                         <Button Content="Đăng nhập"
@@ -221,52 +221,7 @@
                             </Button.Style>
                         </Button>
 
-                        <!-- Divider -->
-                        <Grid Margin="0,22,0,18">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Border Height="1" Background="#E5E7EB" VerticalAlignment="Center"/>
-                            <TextBlock Grid.Column="1"
-                                       Text="hoặc tiếp tục với"
-                                       Margin="14,0"
-                                       Foreground="#9CA3AF"
-                                       FontSize="13"/>
-                            <Border Grid.Column="2" Height="1" Background="#E5E7EB" VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- Social -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Border Width="50" Height="50" CornerRadius="25"
-                                    BorderBrush="#E5E7EB" BorderThickness="1" Margin="8,0">
-                                <TextBlock Text="G"
-                                           FontSize="18"
-                                           FontWeight="Bold"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-                            <Border Width="50" Height="50" CornerRadius="25"
-                                    Background="#111827" Margin="8,0">
-                                <TextBlock Text=""
-                                           FontSize="18"
-                                           Foreground="White"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-
-                            <Border Width="50" Height="50" CornerRadius="25"
-                                    Background="#7DC8E8" Margin="8,0">
-                                <TextBlock Text="f"
-                                           FontSize="20"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"/>
-                            </Border>
-                        </StackPanel>
+                     
                     </StackPanel>
 
                     <!-- Footer text -->

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using QuanLyTaiChinh.Services;
 
 namespace QuanLyTaiChinh.View.Auth
 {
@@ -23,46 +24,64 @@ namespace QuanLyTaiChinh.View.Auth
             InitializeComponent();
         }
 
-        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        private async void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
-            // UI test trước, DB làm sau
+            var main = (MainWindow)Application.Current.MainWindow;
 
-            if (string.IsNullOrWhiteSpace(txtCurrentPassword.Password))
+            if (main.CurrentUser == null)
             {
-                MessageBox.Show("Vui lòng nhập mật khẩu hiện tại.");
+                main.ShowLogin();
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtNewPassword.Password))
+            string current = txtCurrentPassword.Password;
+            string newPassword = txtNewPassword.Password;
+
+            if (string.IsNullOrWhiteSpace(current))
             {
-                MessageBox.Show("Vui lòng nhập mật khẩu mới.");
+                AuthMessageWindow.ShowMessage("Vui lòng nhập mật khẩu hiện tại.");
                 return;
             }
 
-            if (txtNewPassword.Password.Length < 8)
+            if (newPassword.Length < 8)
             {
-                MessageBox.Show("Mật khẩu mới phải có ít nhất 8 ký tự.");
+                AuthMessageWindow.ShowMessage("Mật khẩu mới phải có ít nhất 8 ký tự.");
                 return;
             }
 
-            if (txtNewPassword.Password != txtConfirmPassword.Password)
+            if (newPassword != txtConfirmPassword.Password)
             {
-                MessageBox.Show("Xác nhận mật khẩu không khớp.");
+                AuthMessageWindow.ShowMessage("Xác nhận mật khẩu không khớp.");
                 return;
             }
 
-            MessageBox.Show(
-                "Đổi mật khẩu thành công!",
-                "FinanceWise",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            if (current == newPassword)
+            {
+                AuthMessageWindow.ShowMessage("Mật khẩu mới phải khác mật khẩu hiện tại.");
+                return;
+            }
 
-            // Sau này:
-            // kiểm tra mật khẩu cũ từ DB
-            // hash password mới bằng BCrypt
-            // update Users.PasswordHash
+            try
+            {
+                var authService = new AuthService();
+
+                bool success = await authService.ChangePasswordAsync(
+                    main.CurrentUser.UserId, current, newPassword);
+
+                if (!success)
+                {
+                    AuthMessageWindow.ShowMessage("Mật khẩu hiện tại không đúng.");
+                    return;
+                }
+
+                AuthMessageWindow.ShowMessage("Đổi mật khẩu thành công.");
+                main.ShowMainApp();
+            }
+            catch (Exception ex)
+            {
+                AuthMessageWindow.ShowMessage($"Không đổi được mật khẩu: {ex.Message}");
+            }
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow =

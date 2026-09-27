@@ -44,10 +44,11 @@
                              VerticalContentAlignment="Center"/>
                 </Border>
 
-                <TextBlock Text="Mã có hiệu lực trong 05:00"
-                           Foreground="#94AAB8"
-                           HorizontalAlignment="Center"
-                           Margin="0,12,0,0"/>
+                <TextBlock x:Name="txtCountdown"
+           Text="Đang tải thời gian..."
+           Foreground="#94AAB8"
+           HorizontalAlignment="Center"
+           Margin="0,12,0,0"/>
 
                 
                 <Button Content="Tiếp tục"

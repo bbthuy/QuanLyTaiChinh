@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,7 +12,6 @@ namespace QuanLyTaiChinh.ViewModels
 {
     public partial class BudgetsViewModel : ObservableObject
     {
-        // Doc thang tu BudgetStore dung chung -> khong bi mat du lieu khi chuyen trang roi quay lai
         public ObservableCollection<BudgetItem> Budgets => BudgetStore.Instance.Budgets;
 
         public string CurrentMonthLabel => $"Tháng {DateTime.Now.Month}, {DateTime.Now.Year}";
@@ -19,10 +19,6 @@ namespace QuanLyTaiChinh.ViewModels
         public BudgetsViewModel()
         {
             RecalculateSpent();
-
-            // Chi bat cap nhat khi co Them/Xoa giao dich (CollectionChanged).
-            // Neu SUA mot giao dich co san, can roi trang Ngan sach roi quay lai
-            // (luc do constructor nay chay lai tu dau) de thay so lieu moi nhat.
             TransactionStore.Instance.Transactions.CollectionChanged += (_, __) => RecalculateSpent();
         }
 
@@ -42,23 +38,20 @@ namespace QuanLyTaiChinh.ViewModels
         }
 
         [RelayCommand]
-        private void AddBudget()
+        private async Task AddBudget()
         {
             var existingCategories = Budgets.Select(b => b.Category).ToList();
             var window = new View.BudgetEditWindow(existingCategories);
 
             if (window.ShowDialog() == true)
             {
-                var result = window.ResultBudget;
-                result.Id = Budgets.Count == 0 ? 1 : Budgets.Max(b => b.Id) + 1;
-                Budgets.Add(result);
+                await BudgetStore.Instance.AddAsync(window.ResultBudget);
                 RecalculateSpent();
-                // TODO: goi BudgetService.Add(result) de luu vao database
             }
         }
 
         [RelayCommand]
-        private void EditBudget(BudgetItem? item)
+        private async Task EditBudget(BudgetItem? item)
         {
             if (item is null) return;
 
@@ -71,13 +64,14 @@ namespace QuanLyTaiChinh.ViewModels
                 item.Category = edited.Category;
                 item.Icon = edited.Icon;
                 item.LimitAmount = edited.LimitAmount;
+
+                await BudgetStore.Instance.UpdateAsync(item);
                 RecalculateSpent();
-                // TODO: goi BudgetService.Update(item) de cap nhat database
             }
         }
 
         [RelayCommand]
-        private void DeleteBudget(BudgetItem? item)
+        private async Task DeleteBudget(BudgetItem? item)
         {
             if (item is null) return;
 
@@ -85,8 +79,7 @@ namespace QuanLyTaiChinh.ViewModels
                                            MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (confirm == MessageBoxResult.Yes)
             {
-                Budgets.Remove(item);
-                // TODO: goi BudgetService.Delete(item.Id) de xoa khoi database
+                await BudgetStore.Instance.DeleteAsync(item);
             }
         }
     }

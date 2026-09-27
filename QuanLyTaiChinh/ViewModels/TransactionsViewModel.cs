@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -54,21 +55,18 @@ namespace QuanLyTaiChinh.ViewModels
         private void SetFilter(string filter) => SelectedFilter = filter;
 
         [RelayCommand]
-        private void AddTransaction()
+        private async Task AddTransaction()
         {
             var window = new View.TransactionEditWindow();
             if (window.ShowDialog() == true)
             {
-                var result = window.ResultTransaction;
-                result.Id = TransactionStore.Instance.GetNextId();
-                TransactionStore.Instance.Transactions.Add(result);
+                await TransactionStore.Instance.AddAsync(window.ResultTransaction);
                 Refresh();
-                // TODO: goi TransactionService.Add(result) de luu vao database
             }
         }
 
         [RelayCommand]
-        private void EditTransaction(TransactionItem? item)
+        private async Task EditTransaction(TransactionItem? item)
         {
             if (item is null) return;
 
@@ -81,13 +79,14 @@ namespace QuanLyTaiChinh.ViewModels
                 item.Date = edited.Date;
                 item.Amount = edited.Amount;
                 item.Type = edited.Type;
+
+                await TransactionStore.Instance.UpdateAsync(item);
                 Refresh();
-                // TODO: goi TransactionService.Update(item) de cap nhat database
             }
         }
 
         [RelayCommand]
-        private void DeleteTransaction(TransactionItem? item)
+        private async Task DeleteTransaction(TransactionItem? item)
         {
             if (item is null) return;
 
@@ -95,9 +94,8 @@ namespace QuanLyTaiChinh.ViewModels
                                            MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (confirm == MessageBoxResult.Yes)
             {
-                TransactionStore.Instance.Transactions.Remove(item);
+                await TransactionStore.Instance.DeleteAsync(item);
                 Refresh();
-                // TODO: goi TransactionService.Delete(item.Id) de xoa khoi database
             }
         }
     }
