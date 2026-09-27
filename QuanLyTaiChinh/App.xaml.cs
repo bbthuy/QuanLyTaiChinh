@@ -11,6 +11,7 @@ namespace QuanLyTaiChinh
         {
             string? dir = AppContext.BaseDirectory;
             string? envPath = null;
+            QuanLyTaiChinh.Data.FinanceWiseContextFactory.Create().Database.EnsureCreated();
 
             while (dir != null)
             {
