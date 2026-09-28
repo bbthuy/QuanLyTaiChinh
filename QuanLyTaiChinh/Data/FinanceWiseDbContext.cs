@@ -1,0 +1,98 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using QuanLyTaiChinh.Models;
+using QuanLyTaiChinh.Data.Entities;
+
+
+namespace QuanLyTaiChinh.Data;
+
+public partial class FinanceWiseDbContext : DbContext
+{
+    public FinanceWiseDbContext()
+    {
+    }
+
+    public FinanceWiseDbContext(DbContextOptions<FinanceWiseDbContext> options)
+        : base(options)
+    {
+    }
+    public DbSet<TransactionEntity> Transactions { get; set; }
+    public DbSet<BudgetEntity> Budgets { get; set; }
+    public DbSet<SavingGoalEntity> SavingGoals { get; set; }
+    public virtual DbSet<OtpCode> OtpCodes { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\MSSQLLocalDB;Database=FinanceWiseDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+
+        modelBuilder.Entity<OtpCode>(entity =>
+        {
+            entity.HasKey(e => e.OtpId).HasName("PK__OtpCodes__3143C4A3CD53E5E7");
+
+            entity.HasIndex(e => new { e.UserId, e.Type, e.CreatedAt }, "IX_OtpCodes_User_Type_Created").IsDescending(false, false, true);
+
+            entity.Property(e => e.CodeHash)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_OtpCodes_Created");
+            entity.Property(e => e.Type)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.User).WithMany(p => p.OtpCodes)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OtpCodes_Users");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4C769199F1");
+
+            entity.HasIndex(e => e.Email, "UQ_Users_Email").IsUnique();
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysutcdatetime())", "DF_Users_Created");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.IsActive).HasDefaultValue(true, "DF_Users_Active");
+            entity.Property(e => e.PasswordHash)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+        base.OnModelCreating(modelBuilder);
+
+        
+        modelBuilder.Entity<TransactionEntity>()
+            .HasOne<QuanLyTaiChinh.Models.User>()
+            .WithMany()
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<BudgetEntity>()
+            .HasOne<QuanLyTaiChinh.Models.User>()
+            .WithMany()
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<SavingGoalEntity>()
+            .HasOne<QuanLyTaiChinh.Models.User>()
+            .WithMany()
+            .HasForeignKey(g => g.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}

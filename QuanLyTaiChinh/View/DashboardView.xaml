@@ -1,12 +1,204 @@
 ﻿<UserControl x:Class="QuanLyTaiChinh.View.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:QuanLyTaiChinh.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:models="clr-namespace:QuanLyTaiChinh.Models">
+
+    <StackPanel>
+
+        <!-- ===== TOP BAR ===== -->
+        <StackPanel Margin="0,0,0,20">
+            <TextBlock Text="Tổng quan" Style="{StaticResource PageTitleStyle}"/>
+            <TextBlock Text="{Binding CurrentMonthLabel}" Style="{StaticResource PageSubtitleStyle}"/>
+        </StackPanel>
+
+        <!-- ===== 4 THẺ SỐ LIỆU ===== -->
+        <UniformGrid Columns="4" Margin="0,0,0,20">
+            <Border Style="{StaticResource StatCardBlue}" Margin="0,0,16,0">
+                <StackPanel>
+                    <TextBlock Text="SỐ DƯ HIỆN TẠI" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Text="{Binding Balance}" Style="{StaticResource StatValueStyle}"/>
+                    <TextBlock Text="{Binding BalanceTrend}" Foreground="{StaticResource TextGreen}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource StatCardGreen}" Margin="0,0,16,0">
+                <StackPanel>
+                    <TextBlock Text="{Binding CurrentMonthShort, StringFormat=THU NHẬP {0}}" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Text="{Binding Income}" Style="{StaticResource StatValueStyle}"/>
+                    <TextBlock Text="{Binding IncomeTrend}" Foreground="{StaticResource TextGreen}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource StatCardRed}" Margin="0,0,16,0">
+                <StackPanel>
+                    <TextBlock Text="{Binding CurrentMonthShort, StringFormat=CHI TIÊU {0}}" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Text="{Binding Expense}" Style="{StaticResource StatValueStyle}"/>
+                    <TextBlock Text="{Binding ExpenseTrend}" Foreground="{StaticResource TextRed}" FontSize="12"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource StatCardPurple}">
+                <StackPanel>
+                    <TextBlock Text="{Binding CurrentMonthShort, StringFormat=TIẾT KIỆM {0}}" Style="{StaticResource StatLabelStyle}"/>
+                    <TextBlock Text="{Binding Savings}" Style="{StaticResource StatValueStyle}"/>
+                    <TextBlock Text="{Binding SavingsTrend}" Foreground="#7C3AED" FontSize="12"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- ===== THỐNG KÊ THU/CHI CÓ BỘ LỌC ===== -->
+        <Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
+            <StackPanel>
+                <Grid Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Thống kê thu/chi" Style="{StaticResource CardTitleStyle}"
+                               VerticalAlignment="Center"/>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <!-- Lọc khoảng thời gian -->
+                        <RadioButton Style="{StaticResource FilterPill}" Content="Ngày" GroupName="StatsPeriod"
+                                     Command="{Binding SetStatsPeriodCommand}" CommandParameter="Ngày"
+                                     IsChecked="{Binding SelectedPeriod, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Ngày, Mode=OneWay}"/>
+                        <RadioButton Style="{StaticResource FilterPill}" Content="Tuần" GroupName="StatsPeriod"
+                                     Command="{Binding SetStatsPeriodCommand}" CommandParameter="Tuần"
+                                     IsChecked="{Binding SelectedPeriod, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Tuần, Mode=OneWay}"/>
+                        <RadioButton Style="{StaticResource FilterPill}" Content="Tháng" GroupName="StatsPeriod"
+                                     Command="{Binding SetStatsPeriodCommand}" CommandParameter="Tháng"
+                                     IsChecked="{Binding SelectedPeriod, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Tháng, Mode=OneWay}"/>
+
+                        <!-- Lọc danh mục -->
+                        <ComboBox ItemsSource="{Binding CategoryOptions}" SelectedItem="{Binding SelectedCategory}"
+                                  Width="140" Margin="12,0,0,0" Padding="10,6" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <lvc:CartesianChart Series="{Binding StatsSeries}"
+                                     XAxes="{Binding StatsXAxes}" YAxes="{Binding StatsYAxes}"
+                                     LegendPosition="Bottom" TooltipPosition="Top"
+                                     Height="260"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ===== 2 BIỂU ĐỒ ===== -->
+        <Grid Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.2*"/>
+                <ColumnDefinition Width="1.3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Biểu đồ đường -->
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,16,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding ChartTitle}" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock Text="Đơn vị: VNĐ" Style="{StaticResource PageSubtitleStyle}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="10" Height="10" Fill="#3B82F6" Margin="0,0,6,0"/>
+                            <TextBlock Text="Thu nhập" FontSize="12" Margin="0,0,16,0" VerticalAlignment="Center"/>
+                            <Ellipse Width="10" Height="10" Fill="#F97316" Margin="0,0,6,0"/>
+                            <TextBlock Text="Chi tiêu" FontSize="12" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <lvc:CartesianChart Series="{Binding IncomeExpenseSeries}"
+                                         XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
+                                         LegendPosition="Hidden" TooltipPosition="Top"
+                                         Height="300"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Biểu đồ donut -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Cơ cấu chi tiêu" Style="{StaticResource CardTitleStyle}"/>
+                    <TextBlock Text="{Binding CategoryMonthLabel}" Style="{StaticResource PageSubtitleStyle}" Margin="0,0,0,10"/>
+
+                    <lvc:PieChart Series="{Binding CategorySeries}"
+                                  LegendPosition="Hidden" TooltipPosition="Hidden"
+                                  Height="200" Margin="0,0,0,10"/>
+
+                    <ItemsControl ItemsSource="{Binding CategoryLegend}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="2"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type models:CategorySlice}">
+                                <StackPanel Orientation="Horizontal" Margin="0,4,10,4">
+                                    <Ellipse Width="9" Height="9" Fill="{Binding ColorBrush}" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextGray}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ===== GIAO DỊCH GẦN ĐÂY ===== -->
+        <Border Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Giao dịch gần đây" Style="{StaticResource CardTitleStyle}"/>
+                    <TextBlock Grid.Column="1" Text="Xem tất cả →" Foreground="{StaticResource ColorPrimary}"
+                               FontSize="13" FontWeight="SemiBold"/>
+                </Grid>
+
+                <ItemsControl ItemsSource="{Binding RecentTransactions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models:TransactionItem}">
+                            <Border BorderBrush="{StaticResource PageBg}" BorderThickness="0,1,0,0" Padding="0,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                        <Border Width="40" Height="40" CornerRadius="10"
+                                                Background="{StaticResource CardBlueBg}" Margin="0,0,12,0">
+                                            <TextBlock Text="{Binding Icon}" FontSize="17"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14"/>
+                                            <TextBlock Foreground="{StaticResource TextGray}" FontSize="12">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} · {1:dd/MM/yyyy}">
+                                                        <Binding Path="Category"/>
+                                                        <Binding Path="Date"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" FontWeight="Bold" FontSize="14"
+                                               Text="{Binding Converter={StaticResource TransactionAmountConverter}}"
+                                               Foreground="{Binding Type, Converter={StaticResource TransactionTypeColorConverter}}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
 </UserControl>
