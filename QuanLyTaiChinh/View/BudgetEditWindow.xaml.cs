@@ -2,11 +2,30 @@
 using System.Linq;
 using System.Windows;
 using QuanLyTaiChinh.Models;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace QuanLyTaiChinh.View
 {
     public partial class BudgetEditWindow : Window
     {
+        private void Header_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left) DragMove();
+        }
+
+        private void IconTile_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton rb && IconBox != null)
+                IconBox.Text = rb.Content?.ToString() ?? "";
+        }
+
+        private void IconBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IconPanel == null) return;
+            foreach (var rb in IconPanel.Children.OfType<RadioButton>())
+                rb.IsChecked = rb.Content?.ToString() == IconBox.Text;
+        }
         public BudgetItem ResultBudget { get; private set; } = new();
 
         private readonly List<string> _existingCategories;
