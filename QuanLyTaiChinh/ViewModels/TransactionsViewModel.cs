@@ -79,6 +79,7 @@ namespace QuanLyTaiChinh.ViewModels
                 item.Date = edited.Date;
                 item.Amount = edited.Amount;
                 item.Type = edited.Type;
+                item.Icon = edited.Icon;
 
                 await TransactionStore.Instance.UpdateAsync(item);
                 Refresh();

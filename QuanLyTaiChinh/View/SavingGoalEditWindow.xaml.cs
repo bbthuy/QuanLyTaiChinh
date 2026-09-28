@@ -10,11 +10,29 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Linq;
 
 namespace QuanLyTaiChinh.View
 {
     public partial class SavingGoalEditWindow : Window
     {
+        private void Header_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left) DragMove();
+        }
+
+        private void IconTile_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton rb && IconBox != null)
+                IconBox.Text = rb.Content?.ToString() ?? "";
+        }
+
+        private void IconBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (IconPanel == null) return;
+            foreach (var rb in IconPanel.Children.OfType<RadioButton>())
+                rb.IsChecked = rb.Content?.ToString() == IconBox.Text;
+        }
         public SavingGoalItem ResultGoal { get; private set; } = new();
 
         public SavingGoalEditWindow()

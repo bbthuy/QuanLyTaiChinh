@@ -306,5 +306,250 @@
         </Setter>
     </Style>
 
+    <LinearGradientBrush x:Key="ModalPrimaryGradient" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#5DADE2" Offset="0"/>
+        <GradientStop Color="#2E6DA4" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="ModalInputBorder" Color="#BFDBFE"/>
+
+    <DropShadowEffect x:Key="ModalShadow" Color="#0F172A" Opacity="0.28" BlurRadius="28" ShadowDepth="4" Direction="270"/>
+
+    <!-- Khung ngoai cung cua Window (bo goc, do bong, khong con title bar mac dinh) -->
+    <Style x:Key="ModalCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="Padding" Value="28,24"/>
+        <Setter Property="Effect" Value="{StaticResource ModalShadow}"/>
+    </Style>
+
+    <Style x:Key="ModalTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+    </Style>
+
+    <Style x:Key="ModalFieldLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+
+    <!-- Nut tron "X" dong o goc tren phai -->
+    <Style x:Key="ModalCloseButton" TargetType="Button">
+        <Setter Property="Width" Value="34"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Background" Value="{StaticResource CardBlueBg}"/>
+        <Setter Property="Foreground" Value="{StaticResource TextGray}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- TextBox bo tron, vien xanh nhat, co placeholder lay tu thuoc tinh Tag -->
+    <Style x:Key="ModalTextBox" TargetType="TextBox">
+        <Setter Property="Padding" Value="14,12"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ModalInputBorder}"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="Background" Value="{StaticResource PageBg}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border CornerRadius="12" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                            <TextBlock x:Name="Hint" Text="{TemplateBinding Tag}"
+                                       Margin="{TemplateBinding Padding}" VerticalAlignment="Center"
+                                       Foreground="#94A3B8" IsHitTestVisible="False" Visibility="Collapsed"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Hint" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ComboBox bo tron (ho tro ca che do IsEditable) -->
+    <Style x:Key="ModalComboBox" TargetType="ComboBox">
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <Border CornerRadius="12" Background="{StaticResource PageBg}"
+                                BorderBrush="{StaticResource ModalInputBorder}" BorderThickness="1.5"/>
+
+                        <ToggleButton Focusable="False" ClickMode="Press" Background="Transparent"
+                                      IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="Transparent">
+                                        <Path HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0"
+                                              Data="M0,0 L4,4 L8,0" Stroke="#64748B" StrokeThickness="1.6"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                          Margin="14,12,36,12" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                        <TextBox x:Name="PART_EditableTextBox" Visibility="Collapsed"
+                                 Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextDark}"
+                                 Margin="10,0,36,0" Padding="4,12" VerticalContentAlignment="Center"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"/>
+
+                        <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                               AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
+                            <Border Margin="0,6,0,12"
+                                    MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Background="White" CornerRadius="12" Padding="4"
+                                    BorderBrush="{StaticResource ModalInputBorder}" BorderThickness="1"
+                                    Effect="{StaticResource CardShadow}">
+                                <ScrollViewer MaxHeight="220">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEditable" Value="True">
+                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- DatePicker: bo vien mac dinh, boc them Border bo tron ngoai XAML -->
+    <Style x:Key="ModalDatePicker" TargetType="DatePicker">
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Pill 3 nhom (Chi tieu / Thu nhap / Tiet kiem) -->
+    <Style x:Key="SegmentPill" TargetType="RadioButton">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="13.5"/>
+        <Setter Property="Foreground" Value="{StaticResource TextGray}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bg" CornerRadius="10" Background="Transparent"
+                            BorderThickness="2" BorderBrush="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#FCA5A5"/>
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="#111827"/>
+                            <Setter Property="Foreground" Value="#7F1D1D"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- O vuong chon icon -->
+    <Style x:Key="IconTile" TargetType="RadioButton">
+        <Setter Property="Width" Value="48"/>
+        <Setter Property="Height" Value="48"/>
+        <Setter Property="Margin" Value="0,0,8,8"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Background" Value="#F1F7FD"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bg" CornerRadius="12" Background="{TemplateBinding Background}"
+                            BorderThickness="2" BorderBrush="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#CFE6F7"/>
+                            <Setter TargetName="Bg" Property="BorderBrush" Value="#5DADE2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Nut Luu chinh, nen gradient -->
+    <Style x:Key="ModalPrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource ModalPrimaryGradient}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="48"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="12" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Nut Huy -->
+    <Style x:Key="ModalCancelButton" TargetType="Button">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="{StaticResource ColorPrimary}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="48"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="BorderBrush" Value="{StaticResource ModalInputBorder}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border CornerRadius="12" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
 </ResourceDictionary>

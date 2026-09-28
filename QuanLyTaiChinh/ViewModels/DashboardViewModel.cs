@@ -23,30 +23,37 @@ namespace QuanLyTaiChinh.ViewModels
         public string ChartTitle => $"Thu chi {Now.Month} tháng đầu năm {Now.Year}";
         public string CategoryMonthLabel => $"Tháng {Now.Month}/{Now.Year}";
 
-        // ===== 4 THE SO LIEU =====
-        [ObservableProperty] private string balance = "16.400.000đ";
-        [ObservableProperty] private string balanceTrend = "↑ +8.2% so tháng trước";
+        // Bang mau xoay vong cho danh muc chi tieu (vi danh muc la chuoi tu do, khong co san mau co dinh)
+        private static readonly string[] Palette =
+        {
+            "#3B82F6", "#F87171", "#A78BFA", "#FBBF24", "#6EE7B7",
+            "#93C5FD", "#FDBA74", "#34D399", "#F472B6", "#60A5FA"
+        };
 
-        [ObservableProperty] private string income = "32.500.000đ";
-        [ObservableProperty] private string incomeTrend = "↑ Tăng 3.5tr so tháng trước";
+        // ===== 4 THE SO LIEU (tinh that tu du lieu trong TransactionStore) =====
+        [ObservableProperty] private string balance = "0đ";
+        [ObservableProperty] private string balanceTrend = "";
 
-        [ObservableProperty] private string expense = "16.100.000đ";
-        [ObservableProperty] private string expenseTrend = "↓ Giảm 1.2tr so tháng trước";
+        [ObservableProperty] private string income = "0đ";
+        [ObservableProperty] private string incomeTrend = "";
 
-        [ObservableProperty] private string savings = "4.000.000đ";
-        [ObservableProperty] private string savingsTrend = "12.3% thu nhập";
+        [ObservableProperty] private string expense = "0đ";
+        [ObservableProperty] private string expenseTrend = "";
+
+        [ObservableProperty] private string savings = "0đ";
+        [ObservableProperty] private string savingsTrend = "";
 
         // ===== BIEU DO DUONG TONG QUAN (khong loc) =====
-        public ISeries[] IncomeExpenseSeries { get; set; }
-        public Axis[] XAxes { get; set; }
-        public Axis[] YAxes { get; set; }
+        public ISeries[] IncomeExpenseSeries { get; set; } = Array.Empty<ISeries>();
+        public Axis[] XAxes { get; set; } = Array.Empty<Axis>();
+        public Axis[] YAxes { get; set; } = Array.Empty<Axis>();
 
-        // ===== BIEU DO DONUT: CO CAU CHI TIEU =====
-        public ISeries[] CategorySeries { get; set; }
-        public List<CategorySlice> CategoryLegend { get; set; }
+        // ===== BIEU DO DONUT: CO CAU CHI TIEU THANG HIEN TAI =====
+        public ISeries[] CategorySeries { get; set; } = Array.Empty<ISeries>();
+        public List<CategorySlice> CategoryLegend { get; set; } = new();
 
         // ===== GIAO DICH GAN DAY =====
-        public ObservableCollection<TransactionItem> RecentTransactions { get; set; }
+        public ObservableCollection<TransactionItem> RecentTransactions { get; set; } = new();
 
         // ===== THONG KE THU/CHI CO LOC (theo Ngay/Tuan/Thang + Danh muc) =====
         [ObservableProperty]
@@ -63,13 +70,86 @@ namespace QuanLyTaiChinh.ViewModels
 
         public DashboardViewModel()
         {
-            // TODO: thay toan bo du lieu mau ben duoi bang du lieu that
-            // lay tu TransactionService/AnalyticsService khi co database
+            BuildStatCards();
+            BuildOverviewChart();
+            BuildCategoryDonut();
 
+            RecentTransactions = new ObservableCollection<TransactionItem>(
+                TransactionStore.Instance.Transactions.OrderByDescending(t => t.Date).Take(3));
+
+            BuildCategoryOptions();
+            RecalculateStats();
+        }
+
+        // Thu nhap: +Amount | Chi tieu & Tiet kiem: -Amount (deu lam giam so du kha dung)
+        private static decimal SignedAmount(TransactionItem t) =>
+            t.Type == TransactionType.Income ? t.Amount : -t.Amount;
+
+        private static decimal SumFor(TransactionType type, int month, int year) =>
+            TransactionStore.Instance.Transactions
+                .Where(t => t.Type == type && t.Date.Month == month && t.Date.Year == year)
+                .Sum(t => t.Amount);
+
+        private void BuildStatCards()
+        {
+            var lastMonth = Now.AddMonths(-1);
+
+            decimal incomeThis = SumFor(TransactionType.Income, Now.Month, Now.Year);
+            decimal expenseThis = SumFor(TransactionType.Expense, Now.Month, Now.Year);
+            decimal savingThis = SumFor(TransactionType.Saving, Now.Month, Now.Year);
+
+            decimal incomeLast = SumFor(TransactionType.Income, lastMonth.Month, lastMonth.Year);
+            decimal expenseLast = SumFor(TransactionType.Expense, lastMonth.Month, lastMonth.Year);
+
+            decimal balanceNow = TransactionStore.Instance.Transactions.Sum(SignedAmount);
+            var firstDayThisMonth = new DateTime(Now.Year, Now.Month, 1);
+            decimal balanceBeforeThisMonth = TransactionStore.Instance.Transactions
+                .Where(t => t.Date < firstDayThisMonth)
+                .Sum(SignedAmount);
+
+            Balance = $"{balanceNow:N0}đ";
+            if (balanceBeforeThisMonth != 0)
+            {
+                double pct = (double)((balanceNow - balanceBeforeThisMonth) / Math.Abs(balanceBeforeThisMonth) * 100);
+                BalanceTrend = pct >= 0 ? $"↑ +{pct:0.#}% so tháng trước" : $"↓ {pct:0.#}% so tháng trước";
+            }
+            else
+            {
+                BalanceTrend = "Chưa có dữ liệu tháng trước";
+            }
+
+            Income = $"{incomeThis:N0}đ";
+            var incomeDiff = incomeThis - incomeLast;
+            IncomeTrend = incomeDiff >= 0
+                ? $"↑ Tăng {incomeDiff:N0}đ so tháng trước"
+                : $"↓ Giảm {Math.Abs(incomeDiff):N0}đ so tháng trước";
+
+            Expense = $"{expenseThis:N0}đ";
+            var expenseDiff = expenseThis - expenseLast;
+            ExpenseTrend = expenseDiff >= 0
+                ? $"↑ Tăng {expenseDiff:N0}đ so tháng trước"
+                : $"↓ Giảm {Math.Abs(expenseDiff):N0}đ so tháng trước";
+
+            Savings = $"{savingThis:N0}đ";
+            SavingsTrend = incomeThis > 0
+                ? $"{(double)(savingThis / incomeThis * 100):0.#}% thu nhập"
+                : "Chưa có thu nhập tháng này";
+        }
+
+        private void BuildOverviewChart()
+        {
             int monthsSoFar = Now.Month;
 
-            double[] incomeData = GenerateSample(monthsSoFar, baseValue: 22, amplitude: 3);
-            double[] expenseData = GenerateSample(monthsSoFar, baseValue: 15, amplitude: 2);
+            double[] BuildMonthlySeries(TransactionType type)
+            {
+                var arr = new double[monthsSoFar];
+                for (int m = 1; m <= monthsSoFar; m++)
+                    arr[m - 1] = (double)SumFor(type, m, Now.Year);
+                return arr;
+            }
+
+            double[] incomeData = BuildMonthlySeries(TransactionType.Income);
+            double[] expenseData = BuildMonthlySeries(TransactionType.Expense);
 
             IncomeExpenseSeries = new ISeries[]
             {
@@ -107,23 +187,29 @@ namespace QuanLyTaiChinh.ViewModels
             {
                 new Axis
                 {
-                    Labeler = value => $"{value:N0}tr",
+                    Labeler = v => v >= 1_000_000 ? $"{v / 1_000_000:0.#}tr" : $"{v:N0}",
                     MinLimit = 0,
                     TextSize = 12,
                     SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#E5E7EB")) { StrokeThickness = 1 }
                 }
             };
+        }
 
-            // ---- Co cau chi tieu ----
-            CategoryLegend = new List<CategorySlice>
+        private void BuildCategoryDonut()
+        {
+            var expenseByCategory = TransactionStore.Instance.Transactions
+                .Where(t => t.Type == TransactionType.Expense && t.Date.Month == Now.Month && t.Date.Year == Now.Year)
+                .GroupBy(t => t.Category)
+                .Select(g => new { Category = g.Key, Total = g.Sum(t => t.Amount) })
+                .OrderByDescending(g => g.Total)
+                .ToList();
+
+            CategoryLegend = expenseByCategory.Select((c, i) => new CategorySlice
             {
-                new CategorySlice { Name = "Ăn uống",    Value = 35, ColorHex = "#3B82F6" },
-                new CategorySlice { Name = "Di chuyển",  Value = 10, ColorHex = "#6EE7B7" },
-                new CategorySlice { Name = "Mua sắm",    Value = 15, ColorHex = "#A78BFA" },
-                new CategorySlice { Name = "Giải trí",   Value = 10, ColorHex = "#FBBF24" },
-                new CategorySlice { Name = "Sức khỏe",   Value = 10, ColorHex = "#F87171" },
-                new CategorySlice { Name = "Tiết kiệm",  Value = 20, ColorHex = "#93C5FD" },
-            };
+                Name = c.Category,
+                Value = (double)c.Total,
+                ColorHex = Palette[i % Palette.Length]
+            }).ToList();
 
             CategorySeries = CategoryLegend.Select(c => (ISeries)new PieSeries<double>
             {
@@ -133,14 +219,6 @@ namespace QuanLyTaiChinh.ViewModels
                 InnerRadius = 60,
                 Stroke = null
             }).ToArray();
-
-            // ---- Giao dich gan day ----
-            RecentTransactions = new ObservableCollection<TransactionItem>(
-                TransactionStore.Instance.Transactions.OrderByDescending(t => t.Date).Take(3));
-
-            // ---- Thong ke thu/chi co loc ----
-            BuildCategoryOptions();
-            RecalculateStats();
         }
 
         partial void OnSelectedPeriodChanged(string value) => RecalculateStats();
@@ -277,14 +355,6 @@ namespace QuanLyTaiChinh.ViewModels
                 expense.Add((double)data.Where(t => t.Type == TransactionType.Expense && t.Date.Year == month.Year && t.Date.Month == month.Month).Sum(t => t.Amount));
             }
             return (labels, income, expense);
-        }
-
-        private static double[] GenerateSample(int months, double baseValue, double amplitude)
-        {
-            var data = new double[months];
-            for (int i = 0; i < months; i++)
-                data[i] = Math.Round(baseValue + amplitude * Math.Sin(i * 0.9), 1);
-            return data;
         }
     }
 }
