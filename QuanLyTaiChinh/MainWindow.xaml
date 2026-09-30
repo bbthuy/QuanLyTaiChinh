@@ -33,6 +33,10 @@
         <DataTemplate DataType="{x:Type vm:SavingGoalsViewModel}">
             <views:SavingGoalsView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:DebtReminderViewModel}">
+            <views:DebtReminderView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -124,7 +128,17 @@
                     </StackPanel>
                 </RadioButton>
 
-            </StackPanel>
+                    <RadioButton Style="{StaticResource SidebarNavItem}"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="DebtReminder"
+                                 IsChecked="{Binding SelectedMenu, Converter={StaticResource StringEqualsConverter}, ConverterParameter=DebtReminder, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔔" Margin="0,0,10,0"/>
+                            <TextBlock Text="Nhắc nợ &amp; Hẹn" Style="{StaticResource SidebarNavText}"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                </StackPanel>
         </Border>
 
         <!-- MAIN -->
