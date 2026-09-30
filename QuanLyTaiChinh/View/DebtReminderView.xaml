@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:QuanLyTaiChinh.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="950">
+             d:DesignHeight="750" d:DesignWidth="1100">
 
     <UserControl.Resources>
+        <!-- Converter hiển thị banner cảnh báo -->
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
         <!-- Style tiêu đề cột DataGrid: Nền xám đậm dịu, chữ trắng -->
         <Style x:Key="CustomColumnHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="Background" Value="#2D3748"/>
@@ -24,7 +27,7 @@
         <Style x:Key="CustomRowStyle" TargetType="DataGridRow">
             <Setter Property="Background" Value="#FFFFFF"/>
             <Setter Property="Foreground" Value="#1A202C"/>
-            <Setter Property="Height" Value="42"/>
+            <Setter Property="Height" Value="52"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="BorderBrush" Value="#E2E8F0"/>
             <Style.Triggers>
@@ -37,23 +40,50 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!-- Style nút Tab bộ lọc -->
+        <Style x:Key="TabFilterBtn" TargetType="Button">
+            <Setter Property="Background" Value="#EDF2F7"/>
+            <Setter Property="Foreground" Value="#4A5568"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#CBD5E1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Tiêu đề trang: Đổi sang màu chữ tối TextDark -->
-        <TextBlock Text="Khoản Phải Trả, Cho Vay &amp; Nhắc Hẹn Định Kỳ" 
+        <!-- 1. TIÊU ĐỀ TRANG -->
+        <TextBlock Grid.Row="0" Text="Khoản Phải Trả, Cho Vay &amp; Nhắc Hẹn Định Kỳ" 
                    Foreground="{StaticResource TextDark}" 
-                   FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
+                   FontSize="22" FontWeight="Bold" Margin="0,0,0,14"/>
 
-        <!-- Banner cảnh báo quá hạn / đến hạn -->
-        <Border Grid.Row="1" Background="#EF4444" CornerRadius="8" Padding="14,10" Margin="0,0,0,15"
+        <!-- 2. BANNER CẢNH BÁO QUÁ HẠN / ĐẾN HẠN -->
+        <Border Grid.Row="1" Background="#EF4444" CornerRadius="8" Padding="14,10" Margin="0,0,0,14"
                 Visibility="{Binding HasAlerts, Converter={StaticResource BoolToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="⚠️ " FontSize="15" VerticalAlignment="Center"/>
@@ -61,8 +91,18 @@
             </StackPanel>
         </Border>
 
-        <!-- Danh sách bảng dữ liệu DataGrid dạng Card sáng sủa -->
-        <Border Grid.Row="2" Background="White" CornerRadius="10" Padding="0" BorderBrush="#E2E8F0" BorderThickness="1" ClipToBounds="True">
+        <!-- 3. BỘ LỌC TAB NHANH -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Tất cả" Command="{Binding SetFilterCommand}" CommandParameter="All" Style="{StaticResource TabFilterBtn}"/>
+            <Button Content="Chưa xong" Command="{Binding SetFilterCommand}" CommandParameter="Active" Style="{StaticResource TabFilterBtn}"/>
+            <Button Content="⚠️ Quá hạn" Command="{Binding SetFilterCommand}" CommandParameter="Overdue" Style="{StaticResource TabFilterBtn}"/>
+            <Button Content="Đã xong" Command="{Binding SetFilterCommand}" CommandParameter="Completed" Style="{StaticResource TabFilterBtn}"/>
+            <Button Content="Vay &amp; Nợ" Command="{Binding SetFilterCommand}" CommandParameter="Debt" Style="{StaticResource TabFilterBtn}"/>
+            <Button Content="Định kỳ" Command="{Binding SetFilterCommand}" CommandParameter="Recurring" Style="{StaticResource TabFilterBtn}"/>
+        </StackPanel>
+
+        <!-- 4. DANH SÁCH BẢNG DỮ LIỆU DATAGRID -->
+        <Border Grid.Row="3" Background="White" CornerRadius="10" Padding="0" BorderBrush="#E2E8F0" BorderThickness="1" ClipToBounds="True">
             <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" 
                       CanUserAddRows="False" Background="Transparent" BorderThickness="0"
                       ColumnHeaderStyle="{StaticResource CustomColumnHeaderStyle}"
@@ -70,27 +110,84 @@
                       GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EDF2F7"
                       HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Khoản / Hóa đơn" Binding="{Binding Title}" Width="*"/>
-                    <DataGridTextColumn Header="Phân loại" Binding="{Binding CategoryDisplay}" Width="150"/>
-                    <DataGridTextColumn Header="Đối tác / Người nợ" Binding="{Binding PartnerName}" Width="150"/>
-                    <DataGridTextColumn Header="Số tiền" Binding="{Binding PrincipalAmount, StringFormat={}{0:N0} đ}" Width="130"/>
-                    <DataGridTextColumn Header="Hạn trả" Binding="{Binding DueDate, StringFormat={}{0:dd/MM/yyyy}}" Width="120"/>
-                    <DataGridTextColumn Header="Chu kỳ" Binding="{Binding RecurrenceCycle}" Width="110"/>
-                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusDisplay}" Width="140"/>
-                    <DataGridTemplateColumn Header="Hành động" Width="110">
+                    <!-- Tiêu đề khoản -->
+                    <DataGridTextColumn Header="Khoản / Hóa đơn" Binding="{Binding Title}" Width="1.8*"/>
+
+                    <!-- Phân loại -->
+                    <DataGridTextColumn Header="Phân loại" Binding="{Binding CategoryDisplay}" Width="140"/>
+
+                    <!-- Đối tác / Người nợ -->
+                    <DataGridTextColumn Header="Đối tác / Người nợ" Binding="{Binding PartnerName}" Width="140"/>
+
+                    <!-- Số tiền & Thanh tiến độ thanh toán từng phần -->
+                    <DataGridTemplateColumn Header="Đã trả / Tổng tiền" Width="1.8*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="Hoàn tất" 
-                                        Command="{Binding DataContext.CompleteItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                        CommandParameter="{Binding}" 
-                                        Background="#10B981" Foreground="White" FontWeight="SemiBold"
-                                        BorderThickness="0" Padding="8,4" Cursor="Hand" Margin="4">
-                                    <Button.Resources>
-                                        <Style TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="4"/>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
+                                <StackPanel VerticalAlignment="Center" Margin="8,0">
+                                    <TextBlock FontSize="12.5">
+                                        <Run Text="{Binding PaidAmount, StringFormat={}{0:N0} đ}" Foreground="#10B981" FontWeight="Bold"/>
+                                        <Run Text=" / " Foreground="#94A3B8"/>
+                                        <Run Text="{Binding PrincipalAmount, StringFormat={}{0:N0} đ}" Foreground="#1E293B" FontWeight="SemiBold"/>
+                                    </TextBlock>
+                                    <ProgressBar Value="{Binding PaymentProgress, Mode=OneWay}" Height="5" Maximum="100" Margin="0,3,0,0" Foreground="#10B981" Background="#EDF2F7" BorderThickness="0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Hạn trả -->
+                    <DataGridTextColumn Header="Hạn trả" Binding="{Binding DueDate, StringFormat={}{0:dd/MM/yyyy}}" Width="110"/>
+
+                    <!-- Chu kỳ -->
+                    <DataGridTextColumn Header="Chu kỳ" Binding="{Binding RecurrenceCycle}" Width="100"/>
+
+                    <!-- Trạng thái -->
+                    <DataGridTextColumn Header="Trạng thái" Binding="{Binding StatusDisplay}" Width="130"/>
+
+                    <!-- Hành động: Trả bớt, Hoàn tất, Xóa -->
+                    <DataGridTemplateColumn Header="Hành động" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="4,0">
+                                    <!-- Nút Trả bớt (Thanh toán từng phần) -->
+                                    <Button Content="Trả bớt" 
+                                            Command="{Binding DataContext.PayPartialCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" 
+                                            Background="#0284C7" Foreground="White" FontWeight="SemiBold"
+                                            BorderThickness="0" Padding="7,4" Cursor="Hand" Margin="2,0">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+                                    <!-- Nút Hoàn tất (Tất toán) -->
+                                    <Button Content="Hoàn tất" 
+                                            Command="{Binding DataContext.CompleteItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" 
+                                            Background="#10B981" Foreground="White" FontWeight="SemiBold"
+                                            BorderThickness="0" Padding="7,4" Cursor="Hand" Margin="2,0">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+                                    <!-- Nút Xóa -->
+                                    <Button Content="Xóa" 
+                                            Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" 
+                                            Background="#EF4444" Foreground="White" FontWeight="SemiBold"
+                                            BorderThickness="0" Padding="7,4" Cursor="Hand" Margin="2,0">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="4"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -98,8 +195,8 @@
             </DataGrid>
         </Border>
 
-        <!-- Khung thêm mới phía dưới kèm Nhãn hiển thị chi tiết -->
-        <Border Grid.Row="3" Background="White" CornerRadius="10" Padding="18" Margin="0,15,0,0" BorderBrush="#E2E8F0" BorderThickness="1">
+        <!-- 5. KHUNG THÊM MỚI PHÍA DƯỚI (WRAP PANEL GỐC CỦA BẠN) -->
+        <Border Grid.Row="4" Background="White" CornerRadius="10" Padding="18" Margin="0,15,0,0" BorderBrush="#E2E8F0" BorderThickness="1">
             <StackPanel>
                 <TextBlock Text="Thêm Khoản Hẹn / Chi Phí Định Kỳ Mới" Foreground="{StaticResource TextDark}" FontWeight="Bold" FontSize="15" Margin="0,0,0,12"/>
                 <WrapPanel VerticalAlignment="Center">

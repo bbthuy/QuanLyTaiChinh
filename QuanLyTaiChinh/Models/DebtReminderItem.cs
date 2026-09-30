@@ -11,12 +11,13 @@ namespace QuanLyTaiChinh.Models
         public decimal PrincipalAmount { get; set; }
         public double InterestRate { get; set; }
         public decimal PaidAmount { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateTime DueDate { get; set; } = DateTime.Today.AddDays(7);
         public string RecurrenceCycle { get; set; } = "Monthly";
         public string Status { get; set; } = "Unpaid";
         public string? Note { get; set; }
 
         public decimal RemainingAmount => Math.Max(0, PrincipalAmount - PaidAmount);
+        public double PaymentProgress => PrincipalAmount > 0 ? (double)(PaidAmount / PrincipalAmount) * 100 : 0;
         public bool IsOverdue => Status != "Completed" && DueDate.Date < DateTime.Today;
         public bool IsDueSoon => Status != "Completed" && !IsOverdue && (DueDate.Date - DateTime.Today).TotalDays <= 3;
 

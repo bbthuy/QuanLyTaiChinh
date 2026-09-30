@@ -18,6 +18,7 @@ namespace QuanLyTaiChinh.Services
             _context = context;
         }
 
+        // Lấy danh sách các khoản nhắc của User
         public async Task<List<DebtReminderItem>> GetItemsAsync(int userId)
         {
             var entities = await _context.DebtReminders
@@ -41,27 +42,61 @@ namespace QuanLyTaiChinh.Services
             }).ToList();
         }
 
+        // Thêm mới một khoản nhắc / hóa đơn
         public async Task AddItemAsync(int userId, DebtReminderItem item)
         {
             var entity = new DebtReminderEntity
             {
                 UserId = userId,
-                Title = item.Title,
-                PartnerName = item.PartnerName,
-                CategoryType = item.CategoryType,
+                Title = item.Title ?? string.Empty,
+                PartnerName = item.PartnerName ?? string.Empty,
+                CategoryType = item.CategoryType ?? "Borrowing",
                 PrincipalAmount = item.PrincipalAmount,
                 InterestRate = item.InterestRate,
                 PaidAmount = 0,
                 DueDate = item.DueDate,
-                RecurrenceCycle = item.RecurrenceCycle,
+                RecurrenceCycle = item.RecurrenceCycle ?? "Monthly",
                 Status = "Unpaid",
-                Note = item.Note
+                Note = item.Note ?? string.Empty,
+                CreatedAt = DateTime.Now
             };
 
             _context.DebtReminders.Add(entity);
             await _context.SaveChangesAsync();
         }
 
+        // 1. Chức năng Xóa
+        public async Task DeleteItemAsync(int id)
+        {
+            var entity = await _context.DebtReminders.FindAsync(id);
+            if (entity != null)
+            {
+                _context.DebtReminders.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        // 2. Chức năng Thanh toán từng phần (Trả bớt tiền)
+        public async Task RecordPaymentAsync(int id, decimal amount)
+        {
+            var entity = await _context.DebtReminders.FindAsync(id);
+            if (entity == null || amount <= 0) return;
+
+            entity.PaidAmount += amount;
+            if (entity.PaidAmount >= entity.PrincipalAmount)
+            {
+                entity.PaidAmount = entity.PrincipalAmount;
+                entity.Status = "Completed";
+            }
+            else
+            {
+                entity.Status = "Partial";
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // 3. Hoàn tất / Tất toán toàn bộ
         public async Task MarkAsCompletedAsync(int id)
         {
             var entity = await _context.DebtReminders.FindAsync(id);
@@ -70,38 +105,43 @@ namespace QuanLyTaiChinh.Services
             entity.PaidAmount = entity.PrincipalAmount;
             entity.Status = "Completed";
 
-            // Tự động gia hạn kỳ tiếp theo cho khoản định kỳ
-            if (entity.RecurrenceCycle == "Monthly")
+            // CHỈ tự động gia hạn nếu là khoản "Chi phí định kỳ" (Recurring)
+            if (entity.CategoryType == "Recurring")
             {
-                _context.DebtReminders.Add(new DebtReminderEntity
+                if (entity.RecurrenceCycle == "Monthly")
                 {
-                    UserId = entity.UserId,
-                    Title = entity.Title,
-                    PartnerName = entity.PartnerName,
-                    CategoryType = entity.CategoryType,
-                    PrincipalAmount = entity.PrincipalAmount,
-                    InterestRate = entity.InterestRate,
-                    PaidAmount = 0,
-                    DueDate = entity.DueDate.AddMonths(1),
-                    RecurrenceCycle = "Monthly",
-                    Status = "Unpaid"
-                });
-            }
-            else if (entity.RecurrenceCycle == "Yearly")
-            {
-                _context.DebtReminders.Add(new DebtReminderEntity
+                    _context.DebtReminders.Add(new DebtReminderEntity
+                    {
+                        UserId = entity.UserId,
+                        Title = entity.Title,
+                        PartnerName = entity.PartnerName,
+                        CategoryType = entity.CategoryType,
+                        PrincipalAmount = entity.PrincipalAmount,
+                        InterestRate = entity.InterestRate,
+                        PaidAmount = 0,
+                        DueDate = entity.DueDate.AddMonths(1),
+                        RecurrenceCycle = "Monthly",
+                        Status = "Unpaid",
+                        CreatedAt = DateTime.Now
+                    });
+                }
+                else if (entity.RecurrenceCycle == "Yearly")
                 {
-                    UserId = entity.UserId,
-                    Title = entity.Title,
-                    PartnerName = entity.PartnerName,
-                    CategoryType = entity.CategoryType,
-                    PrincipalAmount = entity.PrincipalAmount,
-                    InterestRate = entity.InterestRate,
-                    PaidAmount = 0,
-                    DueDate = entity.DueDate.AddYears(1),
-                    RecurrenceCycle = "Yearly",
-                    Status = "Unpaid"
-                });
+                    _context.DebtReminders.Add(new DebtReminderEntity
+                    {
+                        UserId = entity.UserId,
+                        Title = entity.Title,
+                        PartnerName = entity.PartnerName,
+                        CategoryType = entity.CategoryType,
+                        PrincipalAmount = entity.PrincipalAmount,
+                        InterestRate = entity.InterestRate,
+                        PaidAmount = 0,
+                        DueDate = entity.DueDate.AddYears(1),
+                        RecurrenceCycle = "Yearly",
+                        Status = "Unpaid",
+                        CreatedAt = DateTime.Now
+                    });
+                }
             }
 
             await _context.SaveChangesAsync();

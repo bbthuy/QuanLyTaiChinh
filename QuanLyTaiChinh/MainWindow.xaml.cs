@@ -1,11 +1,12 @@
-using QuanLyTaiChinh.View.Auth;
-using QuanLyTaiChinh.ViewModels;
-using System.Windows;
-using System.Windows.Controls;
+using QuanLyTaiChinh.Data;
 using QuanLyTaiChinh.Models;
 using QuanLyTaiChinh.Services;
-using System.Windows.Media; 
+using QuanLyTaiChinh.View.Auth;
+using QuanLyTaiChinh.ViewModels;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media; 
 
 namespace QuanLyTaiChinh
 {
@@ -16,7 +17,31 @@ namespace QuanLyTaiChinh
         {
             InitializeComponent();
 
-            ShowLogin();
+            //ShowLogin();
+            // 1. Giả lập phiên đăng nhập của người dùng
+            UserSession.CurrentUser = new User
+            {
+                UserId = 1, // Thay bằng UserId có sẵn trong cơ sở dữ liệu của bạn nếu cần
+                FullName = "Developer Test",
+                Email = "test@financewise.local"
+            };
+
+            // 2. Ẩn hẳn khung đăng nhập AuthHost và hiển thị AppShell
+            AuthHost.Visibility = Visibility.Collapsed;
+            AuthHost.Content = null;
+            AppShell.Visibility = Visibility.Visible;
+
+            // 3. Khởi tạo ViewModel điều hướng chính
+            var mainVm = new MainViewModel();
+            DataContext = mainVm;
+
+            // 4. (Tùy chọn) Điều hướng thẳng tới tab "Nhắc nợ & Hẹn" khi vừa mở app
+            mainVm.NavigateCommand.Execute("DebtReminder");
+
+            // 5. Cập nhật thông tin avatar ban đầu
+            if (txtAvatarInitial != null) txtAvatarInitial.Text = "D";
+            if (txtProfileName != null) txtProfileName.Text = "Developer Test";
+            if (txtProfileEmail != null) txtProfileEmail.Text = "test@financewise.local";
         }
 
         public void Navigate(UserControl view)
