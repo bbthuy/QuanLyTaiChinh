@@ -17,6 +17,7 @@ public partial class FinanceWiseDbContext : DbContext
         : base(options)
     {
     }
+    public DbSet<DebtReminderEntity> DebtReminders { get; set; }
     public DbSet<TransactionEntity> Transactions { get; set; }
     public DbSet<BudgetEntity> Budgets { get; set; }
     public DbSet<SavingGoalEntity> SavingGoals { get; set; }

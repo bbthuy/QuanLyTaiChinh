@@ -57,6 +57,7 @@ namespace QuanLyTaiChinh.ViewModels
                 "Budgets" => new BudgetsViewModel(),
                 "Analytics" => new AnalyticsViewModel(),
                 "SavingGoals" => new SavingGoalsViewModel(),
+                "DebtReminder" => new DebtReminderViewModel(),
                 _ => CurrentViewModel
             };
         }
